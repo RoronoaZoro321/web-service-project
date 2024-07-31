@@ -1,13 +1,12 @@
 const express = require("express");
+const helmet = require("helmet");
 const morgan = require("morgan");
 const rateLimit = require("express-rate-limit");
-const helmet = require("helmet");
 const mongoSanitize = require("express-mongo-sanitize");
 const xss = require("xss-clean");
-const hpp = require("hpp");
 
-const AppError = require("./utils/appError");
-const globalErrorHandler = require("./controllers/errorController");
+const AppError = require("../../common/utils/appError");
+const globalErrorHandler = require("../../common/controllers/errorController");
 const userRouter = require("./routes/userRoutes");
 
 const app = express();
@@ -38,20 +37,6 @@ app.use(mongoSanitize());
 // Data sanitization against XSS
 app.use(xss());
 
-// Prevent parameter pollution
-app.use(
-    hpp({
-        whitelist: [
-            "duration",
-            "ratingsQuantity",
-            "ratingsAverage",
-            "maxGroupSize",
-            "difficulty",
-            "price",
-        ],
-    })
-);
-
 // Serving static file
 app.use(express.static(`${__dirname}/public`));
 
@@ -62,10 +47,15 @@ app.use((req, res, next) => {
 });
 
 // 3) ROUTES
-app.use("/api/v1/users", userRouter);
+app.use("/api/v1/user", userRouter);
 
 app.all("*", (req, res, next) => {
-    next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
+    next(
+        new AppError(
+            `Can't find ${req.originalUrl} on this auth service server!`,
+            404
+        )
+    );
 });
 
 app.use(globalErrorHandler);
