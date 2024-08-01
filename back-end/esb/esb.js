@@ -9,7 +9,25 @@ const esbRouter = require("./routes/esbRoutes");
 const AppError = require("../common/utils/appError");
 const globalErrorHandler = require("../common/controllers/errorController");
 
+const protect = require("./middleware/protect")
+const cookieParser = require('cookie-parser');
+
 const app = express();
+
+
+// // middleware to protect routes
+// app.use((req, res, next) => {
+//     // Protect all routes except /auth/signup and /auth/login
+//     // console.log(req.path); /api/v1/esb/auth/login
+//    if (req.path === "/api/v1/esb/auth/login" || req.path === "/api/v1/esb/auth/signup") {
+//         // console.log("next");
+//         next();
+//     } else {
+//         // console.log("protect");
+//         console.log("Cookies:", req.cookies);
+//         protect(req, res, next);
+//     }
+// });
 
 // 1) GLOBAL MIDDLEWARES
 // Set security HTTP headers
@@ -41,48 +59,19 @@ app.use(xss());
 app.use(express.static(`${__dirname}/public`));
 
 // Test middleware
+// app.use((req, res, next) => {
+//     req.requestTime = new Date().toISOString();
+//     next();
+// });
+
+app.use(express.json()); // To parse JSON bodies
+app.use(cookieParser()); // To parse cookies
+
 app.use((req, res, next) => {
-    req.requestTime = new Date().toISOString();
+    console.log("Cookies:", req.cookies);
     next();
 });
 
-// 2) ROUTES
-// app.post("/api/v1/esb/auth/register", async (req, res, next) => {
-//     try {
-//         const response = await axios.post(
-//             `${process.env.AUTH_SERVICE_URL}api/v1/auth/register`,
-//             req.body
-//         );
-
-//         res.status(200).json({
-//             status: "success",
-//             data: {
-//                 detail: response.data,
-//             },
-//         });
-//     } catch (error) {
-//         next(new AppError("Error communicating with Auth Service", 500));
-//     }
-// });
-
-// app.get("/api/v1/esb/users/", async (req, res, next) => {
-//     try {
-//         console.log(process.env.USER_SERVICE_URL);
-//         const response = await axios.post(
-//             `${process.env.USER_SERVICE_URL}api/v1/user/`,
-//             req.body
-//         );
-
-//         res.status(200).json({
-//             status: "success",
-//             data: {
-//                 detail: response.data,
-//             },
-//         });
-//     } catch (error) {
-//         next(new AppError("Error communicating with User Service", 500));
-//     }
-// });
 
 // 3) ROUTES
 app.use("/api/v1/esb", esbRouter);
@@ -94,5 +83,6 @@ app.all("*", (req, res, next) => {
 
 // Error handling middleware
 app.use(globalErrorHandler);
+
 
 module.exports = app;

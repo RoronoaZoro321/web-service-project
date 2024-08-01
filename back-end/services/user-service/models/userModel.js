@@ -19,36 +19,23 @@ const userSchema = new mongoose.Schema({
         validate: [validator.isEmail, "Please provide a valid email"],
     },
     photo: String,
-    password: {
+    pin: {
         type: String,
-        required: [true, "Please provide a password"],
-        minlength: 8,
+        required: [true, "Please provide a pin"],
+        minlength: 4,
         select: false,
-    },
-    passwordConfirm: {
-        type: String,
-        required: [true, "Please confirm your password"],
-        validate: {
-            validator: function (el) {
-                return el === this.password;
-            },
-            message: "Passwords are not the same!",
-        },
-    },
+    }
 });
 
 userSchema.pre("save", async function (next) {
-    console.log(this);
+    // Only run this function if pin was actually modified
+    if (!this.isModified("pin")) return next();
+
+    // Hash the pin with cost of 12
+    this.pin = await bcrypt.hash(this.pin, 12);
 
     next();
 });
-
-userSchema.methods.correctPassword = async function (
-    candidatePassword,
-    userPassword
-) {
-    return await bcrypt.compare(candidatePassword, userPassword);
-};
 
 const User = mongoose.model("User", userSchema);
 

@@ -1,5 +1,6 @@
 const User = require("../models/userModel");
 const catchAsync = require("../../../common/utils/catchAsync");
+const AppError = require("../../../common/utils/appError");
 
 exports.getAllUsers = catchAsync(async (req, res, next) => {
     const users = await User.find();
@@ -26,3 +27,19 @@ exports.deleteUser = (req, res) => {
         message: "This route is not yet defined",
     });
 };
+
+exports.getUserById = catchAsync(async (req, res, next) => {
+    const user = await User.findById(req.params.id);
+
+    if (!user) {
+        new AppError("User not found", 400)
+    }
+
+    res.status(200).json({
+        status: "success",
+        data: {
+            user,
+        },
+    });
+});
+

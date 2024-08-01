@@ -10,7 +10,9 @@
         "start:auth-service": "cd services/auth-service && npm start",
         "start:user-service": "cd services/user-service && npm start",
         "start:all": "concurrently \"npm run start:esb\" \"npm run start:auth-service\" \"npm run start:user-service\"",
-        "setup-and-start": "npm run install:all && npm run start:all"
+        "setup-and-start": "npm run install:all && npm run start:all",
+        "start": "npm run start:all",
+        "install": "npm run install:all"
     },
     "author": "",
     "license": "ISC",
@@ -19,6 +21,8 @@
         "concurrently": "^6.2.0"
     },
     "dependencies": {
-        "axios": "^1.7.2"
+        "axios": "^1.7.2",
+        "body-parser": "^1.20.2",
+        "cookie-parser": "^1.4.6"
     }
 }
