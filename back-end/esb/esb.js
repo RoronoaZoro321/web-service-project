@@ -4,30 +4,13 @@ const morgan = require("morgan");
 const rateLimit = require("express-rate-limit");
 const mongoSanitize = require("express-mongo-sanitize");
 const xss = require("xss-clean");
+const cookieParser = require("cookie-parser");
 
 const esbRouter = require("./routes/esbRoutes");
 const AppError = require("../common/utils/appError");
 const globalErrorHandler = require("../common/controllers/errorController");
 
-const protect = require("./middleware/protect")
-const cookieParser = require('cookie-parser');
-
 const app = express();
-// hello
-
-// // middleware to protect routes
-// app.use((req, res, next) => {
-//     // Protect all routes except /auth/signup and /auth/login
-//     // console.log(req.path); /api/v1/esb/auth/login
-//    if (req.path === "/api/v1/esb/auth/login" || req.path === "/api/v1/esb/auth/signup") {
-//         // console.log("next");
-//         next();
-//     } else {
-//         // console.log("protect");
-//         console.log("Cookies:", req.cookies);
-//         protect(req, res, next);
-//     }
-// });
 
 // 1) GLOBAL MIDDLEWARES
 // Set security HTTP headers
@@ -59,19 +42,16 @@ app.use(xss());
 app.use(express.static(`${__dirname}/public`));
 
 // Test middleware
-// app.use((req, res, next) => {
-//     req.requestTime = new Date().toISOString();
-//     next();
-// });
-
-app.use(express.json()); // To parse JSON bodies
-app.use(cookieParser()); // To parse cookies
-
 app.use((req, res, next) => {
-    console.log("Cookies:", req.cookies);
+    req.requestTime = new Date().toISOString();
     next();
 });
 
+// To parse JSON bodies
+app.use(express.json());
+
+// To parse cookies
+app.use(cookieParser());
 
 // 3) ROUTES
 app.use("/api/v1/esb", esbRouter);
@@ -83,6 +63,5 @@ app.all("*", (req, res, next) => {
 
 // Error handling middleware
 app.use(globalErrorHandler);
-
 
 module.exports = app;

@@ -8,11 +8,12 @@ const xss = require("xss-clean");
 const AppError = require("../../common/utils/appError");
 const globalErrorHandler = require("../../common/controllers/errorController");
 const userRouter = require("./routes/userRoutes");
-const bodyParser = require('body-parser');
+const bodyParser = require("body-parser");
 
 const app = express();
 
-app.use(bodyParser.json()); 
+app.use(bodyParser.json());
+
 // 1) GLOBAL MIDDLEWARES
 // Set security HTTP headers
 app.use(helmet());
