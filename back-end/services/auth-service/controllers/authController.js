@@ -3,7 +3,7 @@ const catchAsync = require("../../../common/utils/catchAsync");
 const jwt = require("jsonwebtoken");
 const AppError = require("../../../common/utils/appError");
 
-const signToken = id => {
+const signToken = (id) => {
     return jwt.sign({ id }, process.env.JWT_SECRET, {
         expiresIn: process.env.JWT_EXPIRES_IN,
     });
@@ -17,19 +17,18 @@ const createSendToken = (user, statusCode, res) => {
             Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
         ),
         httpOnly: true, // Cookie cannot be accessed via JavaScript
-        secure: process.env.NODE_ENV === 'production' // Only send cookie over HTTPS in production
+        secure: process.env.NODE_ENV === "production", // Only send cookie over HTTPS in production
     };
 
     res.status(statusCode).json({
-        status: 'success',
+        status: "success",
         token,
         cookieOptions,
         data: {
-            user
-        }
+            user,
+        },
     });
 };
-
 
 exports.signup = catchAsync(async (req, res, next) => {
     const newUser = await User.create({
@@ -43,7 +42,6 @@ exports.signup = catchAsync(async (req, res, next) => {
 });
 
 exports.login = catchAsync(async (req, res, next) => {
-    console.log(req.body);
     const { citizenId, pin } = req.body;
 
     // 1) Check if citizenId and pin exist
@@ -61,12 +59,11 @@ exports.login = catchAsync(async (req, res, next) => {
     createSendToken(user, 200, res);
 });
 
-
 exports.logout = (req, res) => {
     // res.cookie('jwt', 'loggedout', {
     //     expires: new Date(Date.now() + 10 * 1000),
     //     httpOnly: true
     // });
 
-    res.status(200).json({ status: 'success' });
-}
+    res.status(200).json({ status: "success" });
+};

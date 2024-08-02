@@ -75,15 +75,12 @@ exports.login = catchAsync(async (req, res, next) => {
 });
 
 exports.logout = catchAsync(async (req, res, next) => {
-    const response = await fetch(
-        `${process.env.AUTH_SERVICE_URL}api/v1/auth/logout`,
-        {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-            },
-        }
-    );
+    await fetch(`${process.env.AUTH_SERVICE_URL}api/v1/auth/logout`, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+        },
+    });
 
     res.cookie("jwt", "loggedout", {
         expires: new Date(Date.now() + 1 * 1000),
