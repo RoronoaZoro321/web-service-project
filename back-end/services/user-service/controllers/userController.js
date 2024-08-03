@@ -1,4 +1,4 @@
-const User = require("../models/userModel");
+const User = require("../../../db/models/userModel");
 const catchAsync = require("../../../common/utils/catchAsync");
 const AppError = require("../../../common/utils/appError");
 
@@ -32,7 +32,7 @@ exports.getUserById = catchAsync(async (req, res, next) => {
     const user = await User.findById(req.params.id);
 
     if (!user) {
-        new AppError("User not found", 400)
+        new AppError("User not found", 400);
     }
 
     res.status(200).json({
@@ -42,4 +42,3 @@ exports.getUserById = catchAsync(async (req, res, next) => {
         },
     });
 });
-
