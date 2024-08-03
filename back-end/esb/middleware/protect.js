@@ -7,7 +7,9 @@ const protect = catchAsync(async (req, res, next) => {
     let token;
     if (req.cookies && req.cookies.jwt) {
         token = req.cookies.jwt;
-    } else {
+    }
+
+    if (!token) {
         return next(
             new AppError(
                 "You are not logged in! Please log in to get access.",
