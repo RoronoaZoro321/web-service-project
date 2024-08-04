@@ -11,8 +11,8 @@ router.post("/auth/login", esbAuthController.login);
 router.get("/auth/logout", esbAuthController.logout);
 
 // User Service
-router.route("/users").get(protect, esbUserController.getAllUsers);
-router.route("/users/profile").get(protect, esbUserController.getProfile);
-router.route("/users/updateMe").patch(protect, esbUserController.updateMe);
+router.get("/users", protect, esbUserController.getAllUsers);
+router.get("/users/profile", protect, esbUserController.getProfile);
+router.patch("/users/updateMe", protect, esbUserController.updateMe);
 
 module.exports = router;

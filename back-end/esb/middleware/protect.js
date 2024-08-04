@@ -22,11 +22,12 @@ const protect = catchAsync(async (req, res, next) => {
 
     // 1) Request user by id => response
     const response = await fetch(
-        `${process.env.USER_SERVICE_URL}api/v1/user/${decoded.id}`,
+        `${process.env.USER_SERVICE_URL}api/v1/users/getUserById`,
         {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
+                "User-ID": `${decoded.id}`,
             },
         }
     );

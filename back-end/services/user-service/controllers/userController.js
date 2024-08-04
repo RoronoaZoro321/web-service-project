@@ -23,10 +23,12 @@ exports.getAllUsers = catchAsync(async (req, res, next) => {
 });
 
 exports.getUserById = catchAsync(async (req, res, next) => {
-    const user = await User.findById(req.params.id);
+    const userId = req.headers["user-id"];
+
+    const user = await User.findById(userId);
 
     if (!user) {
-        new AppError("User not found", 400);
+        return next(new AppError("User not found", 400));
     }
 
     res.status(200).json({

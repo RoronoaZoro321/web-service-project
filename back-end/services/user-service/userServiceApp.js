@@ -50,7 +50,7 @@ app.use((req, res, next) => {
 });
 
 // 3) ROUTES
-app.use("/api/v1/user", userRouter);
+app.use("/api/v1/users", userRouter);
 
 app.all("*", (req, res, next) => {
     next(
