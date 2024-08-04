@@ -19,12 +19,19 @@ exports.getAllUsers = catchAsync(async (req, res, next) => {
 
     const data = await response.json();
 
-    res.status(200).json({
-        status: "success",
-        data: {
-            detail: data,
-        },
-    });
+    if (data.status === "success") {
+        res.status(200).json({
+            status: "success",
+            data: {
+                detail: data,
+            },
+        });
+    } else {
+        res.status(response.status).json({
+            status: "fail",
+            message: data.message,
+        });
+    }
 });
 
 exports.updateMe = catchAsync(async (req, res, next) => {
@@ -34,7 +41,7 @@ exports.updateMe = catchAsync(async (req, res, next) => {
             method: "PATCH",
             headers: {
                 "Content-Type": "application/json",
-                "User-ID": req.user.id,
+                "User-ID": req.user._id,
             },
             body: JSON.stringify(req.body),
         }

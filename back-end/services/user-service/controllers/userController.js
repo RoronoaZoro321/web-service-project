@@ -48,8 +48,7 @@ exports.updateMe = catchAsync(async (req, res, next) => {
         );
     }
 
-    const userId = req;
-    console.log(userId);
+    const userId = req.headers["user-id"];
 
     // 2) Filtered out unwanted fields names that are not allowed to be updated
     const filteredBody = filterObj(req.body, "citizenId", "email");
