@@ -8,9 +8,13 @@ const userSchema = new mongoose.Schema({
         required: [true, "Please insert your citizen card id"],
         unique: true,
     },
-    name: {
+    fname: {
         type: String,
-        required: [true, "Please tell us your name"],
+        required: [true, "Please tell us your first name"],
+    },
+    lname: {
+        type: String,
+        required: [true, "Please tell us your last name"],
     },
     email: {
         type: String,
@@ -22,7 +26,7 @@ const userSchema = new mongoose.Schema({
     photo: String,
     pin: {
         type: String,
-        required: [true, "Please provide a pin"],
+        required: [true, "Please provide a pin minimum 4 characters"],
         minlength: 4,
         select: false,
     }
