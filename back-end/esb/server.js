@@ -10,9 +10,9 @@ dotenv.config({ path: "../configs/config.env" });
 
 const app = require("./esb");
 
-const port = process.env.ESB_PORT || 8000;
-app.listen(port, () => {
-    console.log(`ESB running on port ${port}...`);
+const PORT = process.env.ESB_PORT || 8000;
+app.listen(PORT, () => {
+    console.log(`ESB running on port ${PORT}...`);
 });
 
 process.on("unhandledRejection", (err) => {

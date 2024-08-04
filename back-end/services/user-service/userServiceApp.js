@@ -55,7 +55,7 @@ app.use("/api/v1/user", userRouter);
 app.all("*", (req, res, next) => {
     next(
         new AppError(
-            `Can't find ${req.originalUrl} on this auth service server!`,
+            `Can't find ${req.originalUrl} on this user service server!`,
             404
         )
     );

@@ -3,9 +3,10 @@
     "version": "1.0.0",
     "scripts": {
         "install:esb": "cd esb && npm install",
+        "install:db": "cd db && npm install",
         "install:auth-service": "cd services/auth-service && npm install",
         "install:user-service": "cd services/user-service && npm install",
-        "install:all": "concurrently \"npm run install:esb\" \"npm run install:auth-service\" \"npm run install:user-service\"",
+        "install:all": "concurrently \"npm run install:esb\" \"npm run install:auth-service\" \"npm run install:user-service\" \"npm run install:db\"",
         "start:esb": "cd esb && npm start",
         "start:auth-service": "cd services/auth-service && npm start",
         "start:user-service": "cd services/user-service && npm start",
