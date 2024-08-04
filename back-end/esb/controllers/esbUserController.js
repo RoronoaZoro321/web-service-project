@@ -34,7 +34,9 @@ exports.updateMe = catchAsync(async (req, res, next) => {
             method: "PATCH",
             headers: {
                 "Content-Type": "application/json",
+                "User-ID": req.user.id,
             },
+            body: JSON.stringify(req.body),
         }
     );
 
