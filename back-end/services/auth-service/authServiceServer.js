@@ -7,7 +7,7 @@ process.on("uncaughtException", (err) => {
     process.exit(1);
 });
 
-dotenv.config({ path: "./authConfig.env" });
+dotenv.config({ path: "../configs/config.env" });
 
 const app = require("./authServiceApp");
 

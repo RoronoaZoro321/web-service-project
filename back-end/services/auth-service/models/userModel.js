@@ -50,3 +50,4 @@ userSchema.methods.correctPin = async function (candidatePin, userPin) {
 const User = mongoose.model("User", userSchema);
 
 module.exports = User;
+
