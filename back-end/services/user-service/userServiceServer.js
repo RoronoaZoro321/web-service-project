@@ -1,4 +1,3 @@
-const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 
 process.on("uncaughtException", (err) => {
@@ -10,15 +9,6 @@ process.on("uncaughtException", (err) => {
 dotenv.config({ path: "../../configs/config.env" });
 
 const app = require("./userServiceApp");
-
-const DB = process.env.DATABASE.replace(
-    "<PASSWORD>",
-    process.env.DATABASE_PASSWORD
-);
-
-mongoose
-    .connect(DB)
-    .then((con) => console.log("DB connection successful (User service)"));
 
 const PORT = process.env.USER_PORT;
 
