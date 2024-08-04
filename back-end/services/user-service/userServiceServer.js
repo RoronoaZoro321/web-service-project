@@ -7,7 +7,7 @@ process.on("uncaughtException", (err) => {
     process.exit(1);
 });
 
-dotenv.config({ path: "../configs/config.env" });
+dotenv.config({ path: "../../configs/config.env" });
 
 const app = require("./userServiceApp");
 
@@ -20,7 +20,7 @@ mongoose
     .connect(DB)
     .then((con) => console.log("DB connection successful (User service)"));
 
-const PORT = process.env.PORT;
+const PORT = process.env.USER_SERVICE_PORT;
 
 app.listen(PORT, () => {
     console.log(`User Service running on port ${PORT}...`);

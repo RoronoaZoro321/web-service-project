@@ -1,4 +1,4 @@
-const User = require("../../../db/models/userModel");
+const User = require("../models/userModel");
 const catchAsync = require("../../../common/utils/catchAsync");
 const jwt = require("jsonwebtoken");
 const AppError = require("../../../common/utils/appError");
@@ -33,7 +33,7 @@ const createSendToken = (user, statusCode, res) => {
 exports.signup = catchAsync(async (req, res, next) => {
     const newUser = await User.create({
         citizenId: req.body.citizenId,
-        fname: req.body.name,
+        fname: req.body.fname,
         lname: req.body.lname,
         email: req.body.email,
         pin: req.body.pin,

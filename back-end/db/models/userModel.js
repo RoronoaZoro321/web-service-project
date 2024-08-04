@@ -33,12 +33,12 @@ const userSchema = new mongoose.Schema({
 });
 
 userSchema.pre("save", async function (next) {
-    console.log(this);
     // Only run this function if pin was actually modified
     if (!this.isModified("pin")) return next();
-
+    
     // Hash the pin with cost of 12
     this.pin = await bcrypt.hash(this.pin, 12);
+    console.log(this);
     next();
 });
 
