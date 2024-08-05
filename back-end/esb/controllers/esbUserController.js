@@ -75,3 +75,35 @@ exports.updateMe = catchAsync(async (req, res, next) => {
         });
     }
 });
+
+exports.createAccount = catchAsync(async (req, res, next) => {
+
+    req.body.userId = req.user._id;
+
+    const response = await fetch(
+        `${process.env.USER_SERVICE_URL}api/v1/users/createAccount`,
+        {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(req.body),
+        }
+    );
+
+    const data = await response.json();
+
+    if (data.status === "success") {
+        res.status(201).json({
+            status: "success",
+            data: {
+                detail: data,
+            },
+        });
+    } else {
+        res.status(response.status).json({
+            status: "fail",
+            message: data.message,
+        });
+    }
+});

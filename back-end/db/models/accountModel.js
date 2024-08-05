@@ -1,6 +1,11 @@
 const mongoose = require("mongoose");
 
 const accountSchema = new mongoose.Schema({
+    accountNumber: {
+        type: Number,
+        required: [true, "Please provide an account number"],
+        unique: true,
+    },
     userId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
@@ -8,7 +13,7 @@ const accountSchema = new mongoose.Schema({
     },
     balance: {
         type: Number,
-        required: [true, "Please provide an initial balance"],
+        default: 1000,
         min: [0, "Balance cannot be negative"],
     },
     transactionIds: [
@@ -20,14 +25,9 @@ const accountSchema = new mongoose.Schema({
 });
 
 accountSchema.pre("save", function (next) {
-    this.updatedAt = Date.now();
     next();
 });
 
 const Account = mongoose.model("Account", accountSchema);
 
 module.exports = Account;
-
-const User = mongoose.model("User", userSchema);
-
-module.exports = User;

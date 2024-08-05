@@ -69,9 +69,42 @@ exports.updateMe = catchAsync(async (req, res, next) => {
     });
 });
 
-exports.deleteMe = catchAsync(async (req, res, next) => {
-    res.status(500).json({
-        status: "fail",
-        data: "This route does not exist",
+exports.deleteAllUsers = catchAsync(async (req, res, next) => {
+    await User.deleteMany();
+
+    res.status(204).json({
+        status: "success",
+        data: "success",
     });
 });
+
+exports.addAccount = catchAsync(async (userId, accountId) => {
+    const user = await User.findById(userId);
+    
+    if (!user) {
+        return next(new AppError("User not found", 400));
+    }
+
+    user.accounts.push(accountId);
+    await user.save();
+    return user;
+});
+
+exports.removeAccount = async (userId, accountId) => {
+    const user = await User.findById(userId);
+
+    
+    if (!user) {
+        return next(new AppError("User not found", 400));
+    }
+
+    console.log(!user.accounts.includes(accountId));
+    if (!user.accounts.includes(accountId)) {
+        console.log("Account not found");
+        return next(new AppError("Account not found", 400));
+    }
+
+    user.accounts.pull(accountId);
+
+    await user.save();
+};

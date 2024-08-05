@@ -11,8 +11,12 @@ router.post("/auth/login", esbAuthController.login);
 router.get("/auth/logout", esbAuthController.logout);
 
 // User Service
-router.get("/users", protect, esbUserController.getAllUsers);
+router.get("/users/getAllUsers", protect, esbUserController.getAllUsers);
 router.get("/users/profile", protect, esbUserController.getProfile);
 router.patch("/users/updateMe", protect, esbUserController.updateMe);
 
+// User Service - Account
+router.post("/users/createAccount", protect, esbUserController.createAccount);
+
 module.exports = router;
+

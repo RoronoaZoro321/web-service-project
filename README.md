@@ -53,3 +53,19 @@ Copy code
   "timestamp": ISODate("2023-01-01T08:00:00Z"),
   "details": "User logged in from IP 192.168.1.1"
 }
+
+
+
+#error
+{
+    "status": "error",
+    "error": {
+        "statusCode": 500,
+        "status": "error"
+    },
+    "message": "Cannot read properties of undefined (reading 'user')",
+    "stack": "TypeError: Cannot read properties of undefined (reading 'user')\n    at /Users/roshan/Desktop/Uni/web-service/web-service-project/back-end/esb/middleware/protect.js:38:35\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)"
+}
+
+
+retry login

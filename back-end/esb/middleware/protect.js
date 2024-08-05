@@ -27,7 +27,7 @@ const protect = catchAsync(async (req, res, next) => {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
-                "User-ID": `${decoded.id}`,
+                "user-id": `${decoded.id}`,
             },
         }
     );

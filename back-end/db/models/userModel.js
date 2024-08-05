@@ -26,6 +26,12 @@ const userSchema = new mongoose.Schema({
         minlength: 4,
         select: false,
     },
+    accounts: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Account",
+        },
+    ],
 });
 
 userSchema.pre("save", async function (next) {
