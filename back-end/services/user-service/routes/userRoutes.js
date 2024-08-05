@@ -9,13 +9,13 @@ router.get("/getUserById", userController.getUserById);
 router.patch("/updateMe", userController.updateMe);
 // router.delete("/deleteAllUsers" , userController.deleteAllUsers);
 
-router.get("/getAccountByAccountNumber", accountController.getAccountByAccountNumber);
-router.post("/createAccount", accountController.createAccount);
-router.get("/getAccountById", accountController.getAccountById);
+router.post("/getAccountByAccountNumber", accountController.getAccountByAccountNumber); // in -> esb
+router.post("/createAccount", accountController.createAccount);  // in -> esb
+router.post("/getAccountById", accountController.getAccountById); // in -> esb
 
 router.get("/getAllAccounts", accountController.getAllAccounts);
-router.get("/getAccountsByUserId", accountController.getAccountsByUserId);
+router.post("/getAccountsByUserId", accountController.getAccountsByUserId); // in -> esb
 
-router.delete("/deleteAccountById", accountController.deleteAccountById);
+router.delete("/deleteAccountById", accountController.deleteAccountById); // in -> esb
 
 module.exports = router;

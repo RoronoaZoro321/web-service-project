@@ -16,7 +16,10 @@ router.get("/users/profile", protect, esbUserController.getProfile);
 router.patch("/users/updateMe", protect, esbUserController.updateMe);
 
 // User Service - Account
-router.post("/users/createAccount", protect, esbUserController.createAccount);
+router.post("/users/accounts/createAccount", protect, esbUserController.createAccount);
+router.get("/users/accounts/getAccountsByUserId", protect, esbUserController.getAccountsByUserId);
+router.post("/users/accounts/getAccountById", protect, esbUserController.getAccountById);
+router.post("/users/accounts/getAccountByAccountNumber", protect, esbUserController.getAccountByAccountNumber);
+router.delete("/users/accounts/deleteAccountById", protect, esbUserController.deleteAccountById);
 
 module.exports = router;
-
