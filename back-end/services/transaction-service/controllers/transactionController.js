@@ -19,7 +19,7 @@ exports.getAllTransactions = catchAsync(async (req, res, next) => {
 async function transferFunds(senderId, receiverId, amount) {
     const senderAccount = await Account.findById(senderId);
     const receiverAccount = await Account.findById(receiverId);
-    
+
     if (!senderAccount || !receiverAccount) {
         return next(new AppError("Account not found", 400));
     }
