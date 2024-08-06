@@ -73,7 +73,8 @@ const submit = async (data, form$) => {
     try {
         const response = await axios.post(
             "http://127.0.0.1:3000/api/v1/esb/auth/signup",
-            formData
+            formData,
+            { withCredentials: true }
         );
 
         console.log("Success:", response.data);

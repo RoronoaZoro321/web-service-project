@@ -4,6 +4,7 @@ const morgan = require("morgan");
 const rateLimit = require("express-rate-limit");
 const mongoSanitize = require("express-mongo-sanitize");
 const xss = require("xss-clean");
+const cors = require("cors");
 
 const AppError = require("../../common/utils/appError");
 const globalErrorHandler = require("../../common/controllers/errorController");
@@ -17,6 +18,14 @@ app.use(bodyParser.json());
 // 1) GLOBAL MIDDLEWARES
 // Set security HTTP headers
 app.use(helmet());
+
+// Use the CORS middleware
+app.use(
+    cors({
+        origin: "http://localhost:5173", // Replace with your frontend origin
+        credentials: true,
+    })
+);
 
 // Development logging
 if (process.env.NODE_ENV === "development") {
