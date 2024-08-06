@@ -2,6 +2,7 @@
     <Vueform
         ref="form$"
         size="md"
+        :endpoint="false"
         :display-errors="false"
         add-class="vf-create-account"
         @submit="submit"
@@ -20,15 +21,21 @@
             button-label="Login"
             :full="true"
             size="lg"
+            :disabled="isLoading"
         />
     </Vueform>
+    <Spinner v-if="isLoading" />
 </template>
 
 <script setup>
 import { ref } from "vue";
+import { useRouter } from "vue-router";
 import axios from "axios";
+import Spinner from "./Spinner.vue";
 
 const form$ = ref(null);
+const isLoading = ref(false);
+const router = useRouter();
 
 const getFormData = () => {
     return {
@@ -38,6 +45,8 @@ const getFormData = () => {
 };
 
 const submit = async (data, form$) => {
+    isLoading.value = true;
+
     const formData = getFormData();
 
     try {
@@ -48,8 +57,11 @@ const submit = async (data, form$) => {
         );
 
         console.log("Success:", response.data);
+        router.push("/balance");
     } catch (error) {
         console.error("Error:", error.response.data);
+    } finally {
+        isLoading.value = false;
     }
 };
 </script>

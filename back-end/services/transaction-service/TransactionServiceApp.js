@@ -64,7 +64,7 @@ app.use("/api/v1/transaction", transactionRoutes);
 app.all("*", (req, res, next) => {
     next(
         new AppError(
-            `Can't find ${req.originalUrl} on this user service server!`,
+            `Can't find ${req.originalUrl} on this transaction service server!`,
             404
         )
     );
