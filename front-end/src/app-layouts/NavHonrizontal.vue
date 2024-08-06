@@ -6,7 +6,7 @@
         </div>
         <button class="bg-blue text-white border-none pt-2 pr-4 cursor-pointer">Logout</button>
     </div>
-    <!-- <slot></slot> -->
+    <slot></slot>
 </template>
 
 

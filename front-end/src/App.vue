@@ -1,6 +1,8 @@
 <template>
     <main>
-        <router-view></router-view>
+        <component>
+            <router-view></router-view>
+        </component>
     </main>
 </template>
 

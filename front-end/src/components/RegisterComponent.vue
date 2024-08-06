@@ -82,6 +82,11 @@ const submit = async (data, form$) => {
         console.error("Error:", error.message);
     }
 };
+
+const toggle = ref(false);
+function Confirm() {
+    toggle.value = !toggle.value;
+}
 </script>
 
 <style>
