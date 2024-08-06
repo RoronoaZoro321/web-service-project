@@ -1,4 +1,52 @@
 <template>
+    <Vueform size="md" :display-errors="false" add-class="vf-create-account">
+        <StaticElement
+            name="register_title"
+            tag="h3"
+            content="Register"
+            align="center"
+        />
+        <TextElement
+            name="Firstname"
+            placeholder="Enter Firstname"
+            label="Firstname"
+        />
+        <TextElement
+            name="Lastname"
+            placeholder="Enter Lastname"
+            label="Lastname"
+        />
+        <TextElement name="ID" label="ID" placeholder="Enter  ID Number" />
+        <TextElement name="PIN" input-type="password" label="PIN" />
+        <PhoneElement
+            name="phone"
+            label="Phone"
+            :allow-incomplete="true"
+            :unmask="true"
+        />
+        <TextElement
+            name="email"
+            input-type="email"
+            :rules="['nullable', 'email']"
+            label="Email"
+        />
+        <FileElement
+            name="image"
+            label="Image"
+            accept="image/*"
+            view="image"
+            :rules="[
+                'mimetypes:image/jpeg,image/png,image/gif,image/webp,image/svg+xml,image/tiff',
+            ]"
+        />
+        <ButtonElement
+            name="register"
+            :submits="true"
+            button-label="Register"
+            :full="true"
+            size="lg"
+        />
+    </Vueform>
     <Vueform
         ref="form$"
         size="md"
@@ -51,38 +99,6 @@
 
 <script setup>
 import { ref } from "vue";
-import axios from "axios";
-
-const form$ = ref(null);
-
-const getFormData = () => {
-    return {
-        name: `${form$.value.el$("Firstname").value} ${
-            form$.value.el$("Lastname").value
-        }`,
-        citizenId: form$.value.el$("ID").value,
-        pin: form$.value.el$("PIN").value,
-        email: form$.value.el$("email").value,
-        // image: form$.value.el$("image").value, // Handle file uploads appropriately if needed
-    };
-};
-
-const submit = async (data, form$) => {
-    const formData = getFormData();
-
-    try {
-        const response = await axios.post(
-            "http://127.0.0.1:3000/api/v1/esb/auth/signup",
-            formData,
-            { withCredentials: true }
-        );
-
-        console.log("Success:", response.data);
-    } catch (error) {
-        console.error("Error:", error.response.data);
-    }
-};
-
 const toggle = ref(false);
 function Confirm() {
     toggle.value = !toggle.value;
