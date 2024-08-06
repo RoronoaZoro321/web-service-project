@@ -1,39 +1,33 @@
-const mongoose = require("mongoose");
+const mongoose = require("../db");
 
 const transactionSchema = new mongoose.Schema({
-    accountFrom: {
+    senderId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Account",
         required: true,
     },
-    accountFromNumber: {
-        type: Number,
-        required: [true, "Please provide the account from number"],
+    receiverId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Account",
+        required: true,
     },
     amount: {
         type: Number,
         required: [true, "Please provide the amount"],
         min: [1, "Amount cannot be negative or zero"],
     },
-    accountTo: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Account",
-        required: true,
-    },
-    accountToNumber: {
-        type: Number,
-        required: [true, "Please provide the account to number"],
-    },
-    time: {
-        type: Date,
-        default: Date.now,
-    },
+}, {
+    timestamps: true,
 });
 
-transactionSchema.pre("save", function (next) {
-    this.updatedAt = Date.now();
-    next();
-});
+// Add indexes
+transactionSchema.index({ senderId: 1 });
+transactionSchema.index({ receiverId: 1 });
+
+
+// transactionSchema.pre("save", function (next) {
+//     next();
+// });
 
 const Transaction = mongoose.model("Transaction", transactionSchema);
 
