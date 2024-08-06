@@ -1,7 +1,7 @@
 <template>
     <Vueform
-        size="md"
         ref="form$"
+        size="md"
         :display-errors="false"
         add-class="vf-create-account"
         @submit="submit"
@@ -62,7 +62,6 @@ const getFormData = () => {
         }`,
         citizenId: form$.value.el$("ID").value,
         pin: form$.value.el$("PIN").value,
-        // phone: form$.value.el$("phone").value,
         email: form$.value.el$("email").value,
         // image: form$.value.el$("image").value, // Handle file uploads appropriately if needed
     };
@@ -79,7 +78,7 @@ const submit = async (data, form$) => {
 
         console.log("Success:", response.data);
     } catch (error) {
-        console.error("Error:", error.message);
+        console.error("Error:", error.response.data);
     }
 };
 

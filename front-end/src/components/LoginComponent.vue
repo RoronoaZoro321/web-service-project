@@ -1,40 +1,63 @@
 <template>
     <Vueform
-      size="md"
-      :display-errors="false"
-      add-class="vf-create-account"
+        ref="form$"
+        size="md"
+        :display-errors="false"
+        add-class="vf-create-account"
+        @submit="submit"
     >
-      <StaticElement
-        name="register_title"
-        tag="h3"
-        content="Login"
-        align="center"
-      />
-      <TextElement
-        name="ID"
-        label="ID"
-        placeholder="Enter  ID Number"
-      />
-      <TextElement
-        name="PIN"
-        input-type="password"
-        label="PIN"
-      />
-      <ButtonElement
-        name="register"
-        :submits="true"
-        button-label="Login"
-        :full="true"
-        size="lg"
-      />
+        <StaticElement
+            name="register_title"
+            tag="h3"
+            content="Login"
+            align="center"
+        />
+        <TextElement name="ID" label="ID" placeholder="Enter  ID Number" />
+        <TextElement name="PIN" input-type="password" label="PIN" />
+        <ButtonElement
+            name="register"
+            :submits="true"
+            button-label="Login"
+            :full="true"
+            size="lg"
+        />
     </Vueform>
-  </template>
-  
-  <style>
-  .vf-create-account *,
-  .vf-create-account *:before,
-  .vf-create-account *:after,
-  .vf-create-account:root {
+</template>
+
+<script setup>
+import { ref } from "vue";
+import axios from "axios";
+
+const form$ = ref(null);
+
+const getFormData = () => {
+    return {
+        citizenId: form$.value.el$("ID").value,
+        pin: form$.value.el$("PIN").value,
+    };
+};
+
+const submit = async (data, form$) => {
+    const formData = getFormData();
+
+    try {
+        const response = await axios.post(
+            "http://127.0.0.1:3000/api/v1/esb/auth/login",
+            formData
+        );
+
+        console.log("Success:", response.data);
+    } catch (error) {
+        console.error("Error:", error.response.data);
+    }
+};
+</script>
+
+<style>
+.vf-create-account *,
+.vf-create-account *:before,
+.vf-create-account *:after,
+.vf-create-account:root {
     --vf-primary: #4f81c7;
     --vf-primary-darker: #4f81c7;
     --vf-color-on-primary: #ffffff;
@@ -52,10 +75,10 @@
     --vf-gray-700: #374151;
     --vf-gray-800: #1f2937;
     --vf-gray-900: #111827;
-    --vf-dark-50: #EFEFEF;
-    --vf-dark-100: #DCDCDC;
-    --vf-dark-200: #BDBDBD;
-    --vf-dark-300: #A0A0A0;
+    --vf-dark-50: #efefef;
+    --vf-dark-100: #dcdcdc;
+    --vf-dark-200: #bdbdbd;
+    --vf-dark-300: #a0a0a0;
     --vf-dark-400: #848484;
     --vf-dark-500: #737373;
     --vf-dark-600: #393939;
@@ -274,14 +297,14 @@
     --vf-border-width-toggle: 0.125rem;
     --vf-border-width-tag: 1px;
     --vf-border-width-blockquote: 3px;
-    --vf-shadow-input: 0px 0px 0px 0px rgba(0,0,0,0);
-    --vf-shadow-input-hover: 0px 0px 0px 0px rgba(0,0,0,0);
-    --vf-shadow-input-focus: 0px 0px 0px 0px rgba(0,0,0,0);
-    --vf-shadow-handles: 0px 0px 0px 0px rgba(0,0,0,0);
-    --vf-shadow-handles-hover: 0px 0px 0px 0px rgba(0,0,0,0);
-    --vf-shadow-handles-focus: 0px 0px 0px 0px rgba(0,0,0,0);
-    --vf-shadow-btn: 0px 0px 0px 0px rgba(0,0,0,0);
-    --vf-shadow-dropdown: 0px 0px 0px 0px rgba(0,0,0,0);
+    --vf-shadow-input: 0px 0px 0px 0px rgba(0, 0, 0, 0);
+    --vf-shadow-input-hover: 0px 0px 0px 0px rgba(0, 0, 0, 0);
+    --vf-shadow-input-focus: 0px 0px 0px 0px rgba(0, 0, 0, 0);
+    --vf-shadow-handles: 0px 0px 0px 0px rgba(0, 0, 0, 0);
+    --vf-shadow-handles-hover: 0px 0px 0px 0px rgba(0, 0, 0, 0);
+    --vf-shadow-handles-focus: 0px 0px 0px 0px rgba(0, 0, 0, 0);
+    --vf-shadow-btn: 0px 0px 0px 0px rgba(0, 0, 0, 0);
+    --vf-shadow-dropdown: 0px 0px 0px 0px rgba(0, 0, 0, 0);
     --vf-radius-input: 0.25rem;
     --vf-radius-input-sm: 0.25rem;
     --vf-radius-input-lg: 0.25rem;
@@ -337,5 +360,5 @@
     --vf-slider-tooltip-arrow-size-sm: 0.3125rem;
     --vf-slider-tooltip-arrow-size-lg: 0.3125rem;
     --vf-border-color-signature-hr: var(--vf-gray-300);
-  }
-  </style>
+}
+</style>
