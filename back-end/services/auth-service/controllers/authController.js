@@ -31,11 +31,18 @@ const createSendToken = (user, statusCode, res) => {
 };
 
 exports.signup = catchAsync(async (req, res, next) => {
+
+    const { citizenId, name, email, pin } = req.body;
+
+    if (!citizenId || !name || !email || !pin) {
+        return next(new AppError("Please provide citizenId, name, email, and pin!", 400));
+    }
+
     const newUser = await User.create({
-        citizenId: req.body.citizenId,
-        name: req.body.name,
-        email: req.body.email,
-        pin: req.body.pin,
+        citizenId: citizenId,
+        name: name,
+        email: email,
+        pin: pin,
     });
 
     createSendToken(newUser, 201, res);
