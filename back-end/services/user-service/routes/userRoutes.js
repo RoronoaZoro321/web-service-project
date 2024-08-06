@@ -15,6 +15,7 @@ router.post("/getAccountById", accountController.getAccountById); // in -> esb
 
 router.get("/getAllAccounts", accountController.getAllAccounts);
 router.post("/getAccountsByUserId", accountController.getAccountsByUserId); // in -> esb
+router.post("/checkAccountOwnership", accountController.checkAccountOwnership)
 
 router.delete("/deleteAccountById", accountController.deleteAccountById); // in -> esb
 

@@ -24,9 +24,9 @@ const accountSchema = new mongoose.Schema({
     ],
 });
 
-accountSchema.pre("save", function (next) {
-    next();
-});
+// accountSchema.pre("save", function (next) {
+//     next();
+// });
 
 const Account = mongoose.model("Account", accountSchema);
 

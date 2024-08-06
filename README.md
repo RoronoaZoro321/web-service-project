@@ -1,6 +1,29 @@
 # web-service-project
 
 
+# to do
+- [x] soap
+- [x] app error not showing up (when transaction fails)
+- [x] transaction currently taking to user service when adding funds to account
+- [x] top up feature
+- [x] self recovery
+- [x] have post and get but not put (add in transaction)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 User Document:
 
 json
