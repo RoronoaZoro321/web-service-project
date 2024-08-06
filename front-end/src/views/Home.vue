@@ -37,12 +37,14 @@
         <button
           type="button"
           class="text-white bg-BLUE hover:bg-blue-500 focus:ring-2 focus:ring-blue-300 justify-items-stretch font-medium rounded-lg text-sm px-24 py-1.5 me-2 mb-2"
+          @click="goto({ path: '/register' })"
         >
           Register
         </button>
         <button
           type="button"
           class="text-DARKYELLOW bg-YELLOW hover:bg-yellow-500 focus:ring-2 focus:ring-blue-300 justify-items-stretch font-medium rounded-lg text-sm px-24 py-1.5 me-2 mb-2"
+          @click="goto({ path: '/login' })"
         >
           Login
         </button>
@@ -79,3 +81,21 @@
     </div>
   </div>
 </template>
+<script setup>
+import { useRouter, useRoute, RouterLink } from "vue-router"
+
+const router = useRouter()
+const route = useRoute()
+
+function goto(page) {
+  if (page.name && page.name !== route.name) {
+    router.push({ name: page.name });
+    return;
+  }
+  if (page.path && page.path !== route.path) {
+    router.push({ path: page.path });
+    return;
+  }
+}
+
+</script>

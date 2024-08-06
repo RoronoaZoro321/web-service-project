@@ -3,67 +3,56 @@
     <StaticElement
       name="register_title"
       tag="h3"
-      content="Register"
+      content="Transfer"
       align="center"
     />
+    <TextElement name="ID" label="To" placeholder="Bank Account Number" />
     <TextElement
-      name="Firstname"
-      placeholder="Enter Firstname"
-      label="Firstname"
-    />
-    <TextElement
-      name="Lastname"
-      placeholder="Enter Lastname"
-      label="Lastname"
-    />
-    <TextElement
-      name="ID"
-      label="ID"
-      placeholder="Enter  ID Number"
-    />
-    <TextElement
-      name="PIN"
-      input-type="password"
-      label="PIN"
-    />
-    <PhoneElement
-      name="phone"
-      label="Phone"
-      :allow-incomplete="true"
-      :unmask="true"
-    />
-    <TextElement
-      name="email"
-      input-type="email"
-      :rules="[
-        'nullable',
-        'email',
-      ]"
-      label="Email"
-    />
-    <FileElement
-      name="image"
-      label="Image"
-      accept="image/*"
-      view="image"
-      :rules="[
-        'mimetypes:image/jpeg,image/png,image/gif,image/webp,image/svg+xml,image/tiff',
-      ]"
+      name="number"
+      input-type="number"
+      :rules="['nullable', 'numeric']"
+      autocomplete="off"
+      label="Amount"
+      placeholder="0.00"
     />
     <ButtonElement
-      name="register"
+      name="reset"
+      button-label="Back"
+      @click="goto({ path: '/balance' })"
+      :secondary="true"
+      :resets="true"
+      :columns="{
+        container: 9,
+      }"
+    />
+    <ButtonElement
+      name="transfer"
       :submits="true"
-      button-label="Register"
+      button-label="Next"
       :full="true"
-      size="lg"
+      size="md"
+      :columns="{
+        container: 3,
+      }"
+      @click="goto({ path: '/pin' })"
     />
   </Vueform>
 </template>
 <script setup>
-import {ref} from 'vue'
-const toggle = ref(false)
-function Confirm() {
-	toggle.value = !toggle.value
+import { useRouter, useRoute, RouterLink } from "vue-router"
+
+const router = useRouter()
+const route = useRoute()
+
+function goto(page) {
+  if (page.name && page.name !== route.name) {
+    router.push({ name: page.name });
+    return;
+  }
+  if (page.path && page.path !== route.path) {
+    router.push({ path: page.path });
+    return;
+  }
 }
 </script>
 <style>
@@ -72,7 +61,7 @@ function Confirm() {
 .vf-create-account *:after,
 .vf-create-account:root {
   --vf-primary: #4f81c7;
-  --vf-primary-darker: #446fac;
+  --vf-primary-darker: #4f81c7;
   --vf-color-on-primary: #ffffff;
   --vf-danger: #ef4444;
   --vf-danger-lighter: #fee2e2;
