@@ -20,18 +20,15 @@ const protect = catchAsync(async (req, res, next) => {
 
     const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
 
-
-
-
     // 1) Request user by id => response
     const response = await fetch(
         `${process.env.USER_SERVICE_URL}api/v1/users/getUserById`,
         {
-            method: "GET",
+            method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                "user-id": `${decoded.id}`,
             },
+            body: JSON.stringify({ userId: decoded.id }),
         }
     );
 

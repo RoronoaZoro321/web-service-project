@@ -4,6 +4,7 @@ const Account = require("../../../db/models/accountModel");
 const Topup = require("../../../db/models/topupModel");
 const catchAsync = require("../../../common/utils/catchAsync");
 const AppError = require("../../../common/utils/appError");
+const fs = require("fs");
 const path = require("path");
 
 const wsdlPath = path.join(__dirname, "/transaction.wsdl");
@@ -131,12 +132,9 @@ exports.topup = catchAsync(async (req, res, next) => {
 const startSoapServer = (app) => {
     soap.listen(
         app,
-        "/soap",
+        "/api/v1/transaction",
         soapService,
-        fs.readFileSync(wsdlPath, "utf8"),
-        () => {
-            console.log("SOAP server listening on /soap");
-        }
+        fs.readFileSync(wsdlPath, "utf8")
     );
 };
 

@@ -23,7 +23,7 @@ exports.getAllUsers = catchAsync(async (req, res, next) => {
 });
 
 exports.getUserById = catchAsync(async (req, res, next) => {
-    const userId = req.headers["user-id"];
+    const { userId } = req.body;
 
     const user = await User.findById(userId);
 

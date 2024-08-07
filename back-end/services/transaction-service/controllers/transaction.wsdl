@@ -81,7 +81,7 @@
 
     <service name="TransactionService">
         <port name="TransactionServicePort" binding="tns:TransactionServiceBinding">
-            <soap:address location="http://localhost:3003/soap"/>
+            <soap:address location="http://127.0.0.1:3003/api/v1/transaction"/>
         </port>
     </service>
 </definitions>

@@ -5,17 +5,20 @@ const accountController = require("../controllers/accountController");
 const router = express.Router();
 
 router.route("/").get(userController.getAllUsers);
-router.get("/getUserById", userController.getUserById);
+router.post("/getUserById", userController.getUserById);
 router.patch("/updateMe", userController.updateMe);
 // router.delete("/deleteAllUsers" , userController.deleteAllUsers);
 
-router.post("/getAccountByAccountNumber", accountController.getAccountByAccountNumber); // in -> esb
-router.post("/createAccount", accountController.createAccount);  // in -> esb
+router.post(
+    "/getAccountByAccountNumber",
+    accountController.getAccountByAccountNumber
+); // in -> esb
+router.post("/createAccount", accountController.createAccount); // in -> esb
 router.post("/getAccountById", accountController.getAccountById); // in -> esb
 
 router.get("/getAllAccounts", accountController.getAllAccounts);
 router.post("/getAccountsByUserId", accountController.getAccountsByUserId); // in -> esb
-router.post("/checkAccountOwnership", accountController.checkAccountOwnership)
+router.post("/checkAccountOwnership", accountController.checkAccountOwnership);
 
 router.delete("/deleteAccountById", accountController.deleteAccountById); // in -> esb
 

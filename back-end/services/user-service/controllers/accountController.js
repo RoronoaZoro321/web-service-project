@@ -3,7 +3,6 @@ const catchAsync = require("../../../common/utils/catchAsync");
 const AppError = require("../../../common/utils/appError");
 const userController = require("../controllers/userController");
 
-
 async function generateUniqueAccountNumber() {
     let accountNumber;
     let account;
@@ -88,8 +87,7 @@ exports.checkAccountOwnership = catchAsync(async (req, res, next) => {
             status: "success",
             result: false,
         });
-    } 
-    else {
+    } else {
         res.status(200).json({
             status: "success",
             result: true,
@@ -102,7 +100,7 @@ exports.deleteAccountById = catchAsync(async (req, res, next) => {
 
     const account = await Account.findByIdAndDelete(accountId);
     await userController.removeAccount(account.userId, accountId);
-    
+
     if (!account) {
         return next(new AppError("Account not found", 400));
     }
@@ -131,4 +129,3 @@ exports.getAccountByAccountNumber = catchAsync(async (req, res, next) => {
         },
     });
 });
-
