@@ -1,15 +1,34 @@
 <template>
   <div id="app">
-    <!-- <NavHonrizontal/> -->
-    <main class="p-8 text-center">
-      <div class=" w-96 ">
-        <div class="grid justify-items-center">
-          <img src="../assets/card.png" alt="Card" class="card" />
+    <NavHonrizontal />
+    <div
+      class="relative bg-gradient-to-r from-blue-300 via-emerald-100 to-yellow-100 h-72"
+    >
+      <div class="flex justify-center items-center h-full">
+        <div
+          class="relative w-full h-full flex justify-center items-center p-4"
+        >
+          <img
+            src="../assets/card.png"
+            alt="Card"
+            class="max-w-full max-h-full object-contain"
+          />
+          <div class="absolute">
+            <div>
+              <span class="text-white w-full text-xl px-2 py-1 rounded">123456789</span>
+              <span class="text-white px-2 py-1 rounded">Roshy Smith</span>
+            </div>
+          </div>
         </div>
       </div>
+      
+    </div>
+
+    <div class="p-8 text-center">
+      <div class=" "></div>
       <div class="mb-8">
-        <h2>Your Balance</h2>
-        <p>฿ 30,000.00</p>
+        <h2 class="text-sm text-gray-300">Your Balance</h2>
+        <p class="text-lg text-BLACKTEXT font-semibold">฿ 30,000.00</p>
       </div>
       <div class="actions-container">
         <button
@@ -27,12 +46,12 @@
           Transfer
         </button>
       </div>
-    </main>
+    </div>
   </div>
 </template>
 
 <script setup>
-import NavHonrizontal from '../app-layouts/NavHonrizontal.vue'
+import NavHonrizontal from "../app-layouts/NavHonrizontal.vue";
 import { Icon as Iconify } from "@iconify/vue";
 const WalletIcon = "fluent:wallet-16-filled";
 const TransferIcon = "wpf:bank-cards";

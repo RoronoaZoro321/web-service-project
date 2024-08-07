@@ -8,6 +8,8 @@ import HonrizontalNav from '../app-layouts/NavHonrizontal.vue'
 import PIN from '../views/PINNeeded.vue'
 import Checkout from '../views/Checkout.vue'
 import Topup from '../views/TopUp.vue'
+import RegisterSuccess from '../components/RegisterSuccess.vue'
+
 const routes = [
   {
     path: '/',
@@ -53,6 +55,11 @@ const routes = [
     path: '/topup',
     name: 'Topup',
     component: Topup,
+  },
+  {
+    path: '/registersuccess',
+    name: 'RegisterSuccess',
+    component: RegisterSuccess,
   },
 ];
 

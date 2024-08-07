@@ -56,12 +56,16 @@
       button-label="Register"
       :full="true"
       size="lg"
+       @click="showModal = true"
     />
   </Vueform>
+  <RegisterSuccess v-if="showModal" :visible="showModal" @close="showModal = false" />
 </template>
 <script setup>
 import {ref} from 'vue'
+import RegisterSuccess from '../components/RegisterSuccess.vue'
 const toggle = ref(false)
+const showModal =ref(false)
 function Confirm() {
 	toggle.value = !toggle.value
 }
