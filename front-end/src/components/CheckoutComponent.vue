@@ -47,6 +47,7 @@
                 :columns="{
                     container: 3,
                 }"
+                @click="goto({ path: '/checkout/transfersuccess' })"
             />
         </Vueform>
     </div>

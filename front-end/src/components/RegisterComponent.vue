@@ -63,10 +63,15 @@
 </template>
 <script setup>
 import {ref} from 'vue'
-const toggle = ref(false)
+import RegisterSuccess from '../components/RegisterSuccess.vue';
+const toggle = ref(false);
+const showModal = ref(false);
+
+// Define the function to toggle the value of toggle
 function Confirm() {
-    toggle.value = !toggle.value;
+  toggle.value = !toggle.value;
 }
+
 </script>
 <style>
 .vf-create-account *,

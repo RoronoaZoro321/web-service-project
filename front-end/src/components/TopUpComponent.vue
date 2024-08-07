@@ -11,9 +11,9 @@
       label="ID number"
       placeholder="Enter ID number"
     />
-    <div class="w-full">
-      <div class="row-span-6"></div>
-      <Iconify :icon="ArrowDown" class="col-span-6" />
+    <div class="w-full flex justify-center">
+      <!-- <div class="row-span-6"></div> -->
+      <Iconify :icon="ArrowDown" class="" />
     </div>
     <div
       class="bg-gray-100 text-BLACKTEXT col-span-12 h-12 rounded-md justify-center flex items-center font-semibold"
@@ -40,6 +40,7 @@
       :columns="{
         container: 3,
       }"
+      @click="goto({ path: '/topup/topupsuccess' })"
     />
   </Vueform>
 </template>

@@ -9,6 +9,9 @@ import PIN from '../views/PINNeeded.vue'
 import Checkout from '../views/Checkout.vue'
 import Topup from '../views/TopUp.vue'
 import RegisterSuccess from '../components/RegisterSuccess.vue'
+import TopupSuccess from '../components/TopupSuccess.vue';
+import TransferSuccess from '../components/TransferSuccess.vue';
+import Notification from '../views/Notification.vue'
 
 const routes = [
   {
@@ -60,6 +63,21 @@ const routes = [
     path: '/registersuccess',
     name: 'RegisterSuccess',
     component: RegisterSuccess,
+  },
+  {
+    path: '/topup/topupsuccess',
+    name: 'TopupSuccess',
+    component: TopupSuccess,
+  },
+  {
+    path: '/checkout/transfersuccess',
+    name: 'TransferSuccess',
+    component: TransferSuccess,
+  },
+  {
+    path: '/notification',
+    name: 'Notification',
+    component: Notification,
   },
 ];
 
