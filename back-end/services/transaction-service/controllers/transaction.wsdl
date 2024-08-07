@@ -6,34 +6,14 @@
              name="TransactionService"
              targetNamespace="http://example.com/transaction">
 
-    <types>
-        <xsd:schema targetNamespace="http://example.com/transaction">
-            <xsd:element name="Transaction">
-                <xsd:complexType>
-                    <xsd:sequence>
-                        <xsd:element name="ID" type="xsd:string"/>
-                        <xsd:element name="SenderID" type="xsd:string"/>
-                        <xsd:element name="ReceiverID" type="xsd:string"/>
-                        <xsd:element name="Amount" type="xsd:decimal"/>
-                        <xsd:element name="CreatedAt" type="xsd:dateTime"/>
-                    </xsd:sequence>
-                </xsd:complexType>
-            </xsd:element>
-
-            <xsd:element name="GetAllTransactionsResponse">
-                <xsd:complexType>
-                    <xsd:sequence>
-                        <xsd:element name="transactions" type="tns:Transaction" maxOccurs="unbounded"/>
-                    </xsd:sequence>
-                </xsd:complexType>
-            </xsd:element>
-        </xsd:schema>
-    </types>
-
     <message name="GetAllTransactionsRequest"/>
 
     <message name="GetAllTransactionsResponse">
-        <part name="transactions" element="tns:GetAllTransactionsResponse"/>
+        <part name="ID" type="xsd:string"/>
+        <part name="SenderID" type="xsd:string"/>
+        <part name="ReceiverID" type="xsd:string"/>
+        <part name="Amount" type="xsd:decimal"/>
+        <part name="CreatedAt" type="xsd:dateTime"/>
     </message>
 
     <message name="TransferFundsRequest">
@@ -101,7 +81,7 @@
 
     <service name="TransactionService">
         <port name="TransactionServicePort" binding="tns:TransactionServiceBinding">
-            <soap:address location="http://localhost:3000/soap"/>
+            <soap:address location="http://localhost:3003/soap"/>
         </port>
     </service>
 </definitions>
