@@ -21,6 +21,7 @@ const soapService = {
                             SenderID: t.senderId.toString(),
                             ReceiverID: t.receiverId.toString(),
                             Amount: t.amount,
+                            UpdatedAt: t.updatedAt.toISOString(),
                             CreatedAt: t.createdAt.toISOString(),
                         })),
                     };
@@ -64,6 +65,7 @@ const soapService = {
                             SenderID: newTransaction.senderId.toString(),
                             ReceiverID: newTransaction.receiverId.toString(),
                             Amount: newTransaction.amount,
+                            UpdatedAt: t.updatedAt.toISOString(),
                             CreatedAt: newTransaction.createdAt.toISOString(),
                         },
                     };
@@ -86,6 +88,7 @@ const soapService = {
                             SenderID: t.senderId.toString(),
                             ReceiverID: t.receiverId.toString(),
                             Amount: t.amount,
+                            UpdatedAt: t.updatedAt.toISOString(),
                             CreatedAt: t.createdAt.toISOString(),
                         })),
                     };

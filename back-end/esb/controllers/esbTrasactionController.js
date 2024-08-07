@@ -202,17 +202,25 @@ exports.getAllTransactionsByAccountId = catchAsync(async (req, res, next) => {
 
     try {
         const result = await parseStringPromise(responseText);
-        const results = JSON.stringify(result);
-        const resultss = JSON.parse(results);
         const transactions =
-            resultss["soap:Envelope"]["soap:Body"][0][
+            result["soap:Envelope"]["soap:Body"][0][
                 "tns:GetAllTransactionsByAccountIdResponse"
-            ][0]["tns:transactions"][0];
+            ][0]["tns:transactions"][0]["tns:transactions"];
+        console.log(transactions);
+
+        const formattedTransactions = transactions.map((transaction) => ({
+            _id: transaction.ID[0],
+            senderId: transaction.SenderID[0],
+            receiverId: transaction.ReceiverID[0],
+            amount: transaction.Amount[0],
+            updatedAt: transaction.UpdatedAt[0],
+            createdAt: transaction.CreatedAt[0],
+        }));
 
         res.status(200).json({
             status: "success",
             data: {
-                transactions,
+                transactions: formattedTransactions,
             },
         });
     } catch (err) {

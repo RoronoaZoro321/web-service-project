@@ -13,6 +13,7 @@
         <part name="SenderID" type="xsd:string"/>
         <part name="ReceiverID" type="xsd:string"/>
         <part name="Amount" type="xsd:decimal"/>
+        <part name="UpdatedAt" type="xsd:dateTime"/>
         <part name="CreatedAt" type="xsd:dateTime"/>
     </message>
 
@@ -30,7 +31,12 @@
         <part name="AccountID" type="xsd:string"/>
     </message>
     <message name="GetAllTransactionsByAccountIdResponse">
-        <part name="transactions" type="xsd:string"/>
+        <part name="ID" type="xsd:string"/>
+        <part name="SenderID" type="xsd:string"/>
+        <part name="ReceiverID" type="xsd:string"/>
+        <part name="Amount" type="xsd:decimal"/>
+        <part name="UpdatedAt" type="xsd:dateTime"/>
+        <part name="CreatedAt" type="xsd:dateTime"/>
     </message>
 
     <portType name="TransactionServicePortType">
