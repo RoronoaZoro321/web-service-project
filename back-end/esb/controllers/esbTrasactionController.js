@@ -203,11 +203,11 @@ exports.getAllTransactionsByAccountId = catchAsync(async (req, res, next) => {
     try {
         const result = await parseStringPromise(responseText);
         const results = JSON.stringify(result);
-        console.log(results["soap:Envelope"]);
+        const resultss = JSON.parse(results);
         const transactions =
-            results["soap:Envelope"]["soap:Body"][0][
-                "tran:GetAllTransactionsByAccountIdResponse"
-            ][0]["tran:Transactions"][0];
+            resultss["soap:Envelope"]["soap:Body"][0][
+                "tns:GetAllTransactionsByAccountIdResponse"
+            ][0]["tns:transactions"][0];
 
         res.status(200).json({
             status: "success",
