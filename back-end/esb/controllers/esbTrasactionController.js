@@ -1,8 +1,6 @@
 const catchAsync = require("../../common/utils/catchAsync");
 const AppError = require("../../common/utils/appError");
-const xml2js = require("xml2js");
-const { parseStringPromise } = xml2js;
-const soap = require("soap");
+const parseStringPromise = require("xml2js").parseStringPromise;
 
 function getUserId(req) {
     return req.user._id;
@@ -190,7 +188,7 @@ exports.getAllTransactionsByAccountId = catchAsync(async (req, res, next) => {
     `;
 
     const response = await fetch(
-        `${process.env.TRANSACTION_SERVICE_URL}/transactionService`,
+        `${process.env.TRANSACTION_SERVICE_URL}api/v1/transaction`,
         {
             method: "POST",
             headers: {
@@ -202,23 +200,24 @@ exports.getAllTransactionsByAccountId = catchAsync(async (req, res, next) => {
 
     const responseText = await response.text();
 
-    parseStringPromise(responseText)
-        .then((result) => {
-            const transactions =
-                result["soapenv:Envelope"]["soapenv:Body"][0][
-                    "tran:GetAllTransactionsByAccountIdResponse"
-                ][0]["tran:Transactions"];
+    try {
+        const result = await parseStringPromise(responseText);
+        const results = JSON.stringify(result);
+        console.log(results["soap:Envelope"]);
+        const transactions =
+            results["soap:Envelope"]["soap:Body"][0][
+                "tran:GetAllTransactionsByAccountIdResponse"
+            ][0]["tran:Transactions"][0];
 
-            res.status(200).json({
-                status: "success",
-                data: {
-                    transactions,
-                },
-            });
-        })
-        .catch((err) => {
-            next(new AppError("Failed to parse SOAP response", 500));
+        res.status(200).json({
+            status: "success",
+            data: {
+                transactions,
+            },
         });
+    } catch (err) {
+        next(new AppError("Failed to parse SOAP response", 500));
+    }
 });
 
 exports.topup = catchAsync(async (req, res, next) => {
