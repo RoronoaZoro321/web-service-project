@@ -80,7 +80,7 @@ exports.deleteAllUsers = catchAsync(async (req, res, next) => {
 
 exports.addAccount = catchAsync(async (userId, accountId) => {
     const user = await User.findById(userId);
-    
+
     if (!user) {
         return next(new AppError("User not found", 400));
     }
@@ -93,7 +93,6 @@ exports.addAccount = catchAsync(async (userId, accountId) => {
 exports.removeAccount = async (userId, accountId) => {
     const user = await User.findById(userId);
 
-    
     if (!user) {
         return next(new AppError("User not found", 400));
     }

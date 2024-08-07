@@ -13,6 +13,7 @@ exports.signup = catchAsync(async (req, res, next) => {
     );
 
     const data = await response.json();
+
     const { token, cookieOptions } = data;
 
     if (data.status === "success") {
@@ -23,7 +24,7 @@ exports.signup = catchAsync(async (req, res, next) => {
         data.data.user.pin = undefined;
 
         res.cookie("jwt", token, cookieOptions);
-        res.status(201).json({
+        res.status(response.status).json({
             status: "success",
             data: {
                 detail: data.data,
@@ -32,7 +33,7 @@ exports.signup = catchAsync(async (req, res, next) => {
     } else {
         res.status(response.status).json({
             status: "fail",
-            message: data.message,
+            message: data,
         });
     }
 });
@@ -60,7 +61,7 @@ exports.login = catchAsync(async (req, res, next) => {
         data.data.user.pin = undefined;
 
         res.cookie("jwt", token, cookieOptions);
-        res.status(200).json({
+        res.status(response.status).json({
             status: "success",
             data: {
                 detail: data.data,

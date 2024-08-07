@@ -18,10 +18,12 @@ const app = express();
 app.use(helmet());
 
 // Use the CORS middleware
-app.use(cors({
-    origin: 'http://localhost:5173', // Replace with your frontend origin
-    credentials: true
-}));
+app.use(
+    cors({
+        origin: "http://localhost:5173", // Replace with your frontend origin
+        credentials: true,
+    })
+);
 
 // Development logging
 if (process.env.NODE_ENV === "development") {
