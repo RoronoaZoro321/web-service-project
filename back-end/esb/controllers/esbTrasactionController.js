@@ -1,4 +1,5 @@
 const catchAsync = require("../../common/utils/catchAsync");
+const AppError = require("../../common/utils/appError");
 
 function getUserId(req) {
     return req.user._id;
@@ -31,24 +32,34 @@ async function checkAccountOwnership(userId, accountId) {
 }
 
 async function getAccountIdByNumber(accountNumber) {
-    const response = await fetch(
-        `${process.env.USER_SERVICE_URL}api/v1/users/getAccountByAccountNumber`,
-        {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({accountNumber}),
+    try {
+        const response = await fetch(
+            `${process.env.USER_SERVICE_URL}api/v1/users/getAccountByAccountNumber`,
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ accountNumber }),
+            }
+        );
+
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
         }
-    );
 
-    const data = await response.json();
+        const data = await response.json();
 
-    return {
-        accountId: data.data.account._id,
-        userId: data.data.account.userId,
-    };
-};
+        console.log("data", data);
+
+        return {
+            accountId: data.data.account._id,
+            userId: data.data.account.userId,
+        };
+    } catch (error) {
+        return error;
+    }
+}
 
 exports.transfer = catchAsync(async (req, res, next) => {
 
@@ -57,6 +68,16 @@ exports.transfer = catchAsync(async (req, res, next) => {
     // get Id from Number
     const senderAccount = await getAccountIdByNumber(senderAccountNumber);
     const receiverAccount = await getAccountIdByNumber(receiverAccountNumber);
+
+    if (senderAccount instanceof Error) {
+        return next(new AppError("Sender account not found", 400));
+    }
+
+    if (receiverAccount instanceof Error) {
+        return next(new AppError("Receiver account not found", 400));
+    }
+
+
     const { userId, accountId: senderId } = senderAccount;
     const { accountId: receiverId } = receiverAccount;
 
@@ -109,14 +130,11 @@ exports.transfer = catchAsync(async (req, res, next) => {
 
 exports.getAllTransactionsByAccountId = catchAsync(async (req, res, next) => {
     const { accountNumber } = req.body;
-    console.log("accountNumber: ", accountNumber);
 
     const { accountId } = await getAccountIdByNumber(accountNumber);
-    console.log("accountId: ", accountId);
 
     // check if accountId belongs to the user
     const isOwner = await checkAccountOwnership(getUserId(req), accountId);
-    console.log("isOwner: ", isOwner);
 
 
     if (!isOwner) {
@@ -151,5 +169,46 @@ exports.getAllTransactionsByAccountId = catchAsync(async (req, res, next) => {
     }
 });
 
+exports.topup = catchAsync(async (req, res, next) => {
 
-// exports.getAllTransactionsByAccountIdFormatted = catchAsync(async (req, res, next) => {
+    const { accountNumber, code } = req.body;
+
+    const { accountId } = await getAccountIdByNumber(accountNumber);
+
+    // check if accountId belongs to the user
+    const isOwner = await checkAccountOwnership(getUserId(req), accountId);
+
+    if (!isOwner) {
+        return next(new AppError("You do not own the account", 400));
+    }
+
+    const response = await fetch(
+        `${process.env.TRANSACTION_SERVICE_URL}api/v1/transaction/topup`,
+        {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ accountId, code }),
+        }
+    );
+
+    const data = await response.json();
+
+    console.log(data);
+
+    if (data.status === "success") {
+        res.status(200).json({
+            status: "success",
+            data: {
+                account: data.data.account,
+            },
+        });
+    } else {
+        res.status(response.status).json({
+            status: "fail",
+            message: data.message,
+        });
+    }
+
+});

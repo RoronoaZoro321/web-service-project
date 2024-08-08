@@ -27,4 +27,6 @@ router.delete("/users/accounts/deleteAccountById", protect, esbUserController.de
 router.post("/transaction/transfer", protect, esbTransactionController.transfer)
 router.post("/transaction/MyAccTransactions", protect, esbTransactionController.getAllTransactionsByAccountId)
 
+router.patch("/transaction/topup", protect, esbTransactionController.topup)
+
 module.exports = router;
