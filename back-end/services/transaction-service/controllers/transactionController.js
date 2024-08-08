@@ -1,92 +1,104 @@
+const soap = require("soap");
 const Transaction = require("../../../db/models/transactionModel");
 const Account = require("../../../db/models/accountModel");
 const Topup = require("../../../db/models/topupModel");
 const catchAsync = require("../../../common/utils/catchAsync");
 const AppError = require("../../../common/utils/appError");
+const fs = require("fs");
+const path = require("path");
 
-// Get all transactions
-exports.getAllTransactions = catchAsync(async (req, res, next) => {
-    const transactions = await Transaction.find();
+const wsdlPath = path.join(__dirname, "/transaction.wsdl");
 
-    res.status(200).json({
-        status: "success",
-        results: transactions.length,
-        data: {
-            transactions,
-        },
-    });
-});
-
-async function transferFunds(senderId, receiverId, amount) {
-    const senderAccount = await Account.findById(senderId);
-    const receiverAccount = await Account.findById(receiverId);
-
-    if (!senderAccount || !receiverAccount) {
-        return next(new AppError("Account not found", 400));
-    }
-    
-    if (senderAccount.balance < amount) {
-        return next(new AppError("Insufficient funds", 400));
-    }
-    
-    senderAccount.balance -= amount;
-    receiverAccount.balance += amount;
-
-    const newTransaction = await createTransaction(senderId, receiverId, amount);
-
-    senderAccount.transactionIds.push(newTransaction._id);
-    receiverAccount.transactionIds.push(newTransaction._id);
-
-    await senderAccount.save();
-    await receiverAccount.save();
-
-    return newTransaction;
-}
-
-async function createTransaction(senderId, receiverId, amount) {
-    const newTransaction = await Transaction.create({
-        senderId,
-        receiverId,
-        amount,
-    });
-
-    return newTransaction;
-}
-
-
-
-// Transfer funds between accounts
-exports.transfer = catchAsync(async (req, res, next) => {
-    const { senderId, receiverId, amount } = req.body;
-    const transaction = await transferFunds(senderId, receiverId, amount);
-
-    if (transaction) {
-        res.status(200).json({
-            status: "success",
-            data: {
-                message: "Funds transferred successfully",
-                transaction,
+const soapService = {
+    TransactionService: {
+        TransactionServicePort: {
+            GetAllTransactions: async function (args) {
+                try {
+                    const transactions = await Transaction.find();
+                    return {
+                        transactions: transactions.map((t) => ({
+                            ID: t._id.toString(),
+                            SenderID: t.senderId.toString(),
+                            ReceiverID: t.receiverId.toString(),
+                            Amount: t.amount,
+                            UpdatedAt: t.updatedAt.toISOString(),
+                            CreatedAt: t.createdAt.toISOString(),
+                        })),
+                    };
+                } catch (err) {
+                    throw new Error(err.message);
+                }
             },
-        });
-    }
-});
+            TransferFunds: async function (args) {
+                const { SenderID, ReceiverID, Amount } = args;
+                try {
+                    const senderAccount = await Account.findById(SenderID);
+                    const receiverAccount = await Account.findById(ReceiverID);
 
-// Get all transactions by account id
-exports.getAllTransactionsByAccountId = catchAsync(async (req, res, next) => {
-    const accountId = req.body.accountId;
+                    if (!senderAccount || !receiverAccount) {
+                        throw new AppError("Account not found", 400);
+                    }
 
-    const transactions = await Transaction.find({
-        $or: [{ senderId: accountId }, { receiverId: accountId }],
-    });
+                    if (senderAccount.balance < Amount) {
+                        throw new AppError("Insufficient funds", 400);
+                    }
 
-    res.status(200).json({
-        status: "success",
-        results: transactions.length,
-        data: {
-            transactions,
+                    senderAccount.balance -= Amount;
+                    receiverAccount.balance += Amount;
+
+                    const newTransaction = await Transaction.create({
+                        senderId: SenderID.toString(),
+                        receiverId: ReceiverID.toString(),
+                        amount: Amount,
+                    });
+
+                    senderAccount.transactionIds.push(newTransaction._id);
+                    receiverAccount.transactionIds.push(newTransaction._id);
+
+                    await senderAccount.save();
+                    await receiverAccount.save();
+
+                    return {
+                        message: "Funds transferred successfully",
+                        transaction: {
+                            ID: newTransaction._id.toString(),
+                            SenderID: newTransaction.senderId.toString(),
+                            ReceiverID: newTransaction.receiverId.toString(),
+                            Amount: newTransaction.amount,
+                            UpdatedAt: t.updatedAt.toISOString(),
+                            CreatedAt: newTransaction.createdAt.toISOString(),
+                        },
+                    };
+                } catch (err) {
+                    throw new Error(err.message);
+                }
+            },
+            GetAllTransactionsByAccountId: async function (args) {
+                const { AccountID } = args;
+                try {
+                    const transactions = await Transaction.find({
+                        $or: [
+                            { senderId: AccountID },
+                            { receiverId: AccountID },
+                        ],
+                    });
+                    return {
+                        transactions: transactions.map((t) => ({
+                            ID: t._id.toString(),
+                            SenderID: t.senderId.toString(),
+                            ReceiverID: t.receiverId.toString(),
+                            Amount: t.amount,
+                            UpdatedAt: t.updatedAt.toISOString(),
+                            CreatedAt: t.createdAt.toISOString(),
+                        })),
+                    };
+                } catch (err) {
+                    throw new Error(err.message);
+                }
+            },
         },
-    });
-});
+    },
+};
 
 exports.topup = catchAsync(async (req, res, next) => {
     const { accountId, code } = req.body;
@@ -119,31 +131,14 @@ exports.topup = catchAsync(async (req, res, next) => {
         },
     });
 });
-    
-exports.createTopup = catchAsync(async (req, res, next) => {
-    const { code, amount } = req.body;
-    const topup = await Topup.create({
-        code,
-        amount,
-    });
 
-    res.status(201).json({
-        status: "success",
-        data: {
-            topup,
-        },
-    });
-});
+const startSoapServer = (app) => {
+    soap.listen(
+        app,
+        "/api/v1/transaction",
+        soapService,
+        fs.readFileSync(wsdlPath, "utf8")
+    );
+};
 
-
-exports.getAllTopup = catchAsync(async (req, res, next) => {
-    const topups = await Topup.find();
-
-    res.status(200).json({
-        status: "success",
-        results: topups.length,
-        data: {
-            topups,
-        },
-    });
-});
+module.exports = startSoapServer;

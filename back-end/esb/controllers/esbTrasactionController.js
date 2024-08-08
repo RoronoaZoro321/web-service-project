@@ -1,18 +1,16 @@
 const catchAsync = require("../../common/utils/catchAsync");
 const AppError = require("../../common/utils/appError");
+const parseStringPromise = require("xml2js").parseStringPromise;
 
 function getUserId(req) {
     return req.user._id;
 }
 
 async function checkAccountOwnership(userId, accountId) {
-
-    console.log(userId, accountId);
-
     const req_body = {
         userId,
         accountId,
-    }
+    };
 
     const response = await fetch(
         `${process.env.USER_SERVICE_URL}api/v1/users/checkAccountOwnership`,
@@ -45,7 +43,7 @@ async function getAccountIdByNumber(accountNumber) {
         );
 
         if (!response.ok) {
-            throw new Error('Network response was not ok');
+            throw new Error("Network response was not ok");
         }
 
         const data = await response.json();
@@ -62,9 +60,8 @@ async function getAccountIdByNumber(accountNumber) {
 }
 
 exports.transfer = catchAsync(async (req, res, next) => {
-
     const { senderAccountNumber, receiverAccountNumber, amount } = req.body;
-    
+
     // get Id from Number
     const senderAccount = await getAccountIdByNumber(senderAccountNumber);
     const receiverAccount = await getAccountIdByNumber(receiverAccountNumber);
@@ -76,7 +73,6 @@ exports.transfer = catchAsync(async (req, res, next) => {
     if (receiverAccount instanceof Error) {
         return next(new AppError("Receiver account not found", 400));
     }
-
 
     const { userId, accountId: senderId } = senderAccount;
     const { accountId: receiverId } = receiverAccount;
@@ -90,14 +86,16 @@ exports.transfer = catchAsync(async (req, res, next) => {
 
     // check if senderId and receiverId are the same
     if (senderId === receiverId) {
-        return next(new AppError("Sender and receiver cannot be the same", 400));
+        return next(
+            new AppError("Sender and receiver cannot be the same", 400)
+        );
     }
 
     const req_body = {
         senderId,
         receiverId,
         amount,
-    }
+    };
 
     const response = await fetch(
         `${process.env.TRANSACTION_SERVICE_URL}api/v1/transaction/transfer`,
@@ -127,50 +125,110 @@ exports.transfer = catchAsync(async (req, res, next) => {
     }
 });
 
+// exports.getAllTransactionsByAccountId = catchAsync(async (req, res, next) => {
+//     const { accountNumber } = req.body;
+
+//     const { accountId } = await getAccountIdByNumber(accountNumber);
+
+//     // check if accountId belongs to the user
+//     const isOwner = await checkAccountOwnership(getUserId(req), accountId);
+
+//     if (!isOwner) {
+//         return next(new AppError("You do not own the account", 400));
+//     }
+
+//     const response = await fetch(
+//         `${process.env.TRANSACTION_SERVICE_URL}api/v1/transaction/getAllTransactionsByAccountId`,
+//         {
+//             method: "POST",
+//             headers: {
+//                 "Content-Type": "application/json",
+//             },
+//             body: JSON.stringify({ accountId }),
+//         }
+//     );
+
+//     const data = await response.json();
+
+//     if (data.status === "success") {
+//         res.status(200).json({
+//             status: "success",
+//             data: {
+//                 transactions: data.data.transactions,
+//             },
+//         });
+//     } else {
+//         res.status(response.status).json({
+//             status: "fail",
+//             message: data.message,
+//         });
+//     }
+// });
 
 exports.getAllTransactionsByAccountId = catchAsync(async (req, res, next) => {
     const { accountNumber } = req.body;
 
     const { accountId } = await getAccountIdByNumber(accountNumber);
 
-    // check if accountId belongs to the user
     const isOwner = await checkAccountOwnership(getUserId(req), accountId);
-
 
     if (!isOwner) {
         return next(new AppError("You do not own the account", 400));
     }
 
+    const xmlRequest = `
+        <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:tran="http://example.com/transaction">
+            <soapenv:Header/>
+            <soapenv:Body>
+                <tran:GetAllTransactionsByAccountId>
+                    <tran:AccountID>${accountId}</tran:AccountID>
+                </tran:GetAllTransactionsByAccountId>
+            </soapenv:Body>
+        </soapenv:Envelope>
+    `;
+
     const response = await fetch(
-        `${process.env.TRANSACTION_SERVICE_URL}api/v1/transaction/getAllTransactionsByAccountId`,
+        `${process.env.TRANSACTION_SERVICE_URL}api/v1/transaction`,
         {
             method: "POST",
             headers: {
-                "Content-Type": "application/json",
+                "Content-Type": "text/xml",
             },
-            body: JSON.stringify({ accountId }),
+            body: xmlRequest,
         }
     );
 
-    const data = await response.json();
+    const responseText = await response.text();
 
-    if (data.status === "success") {
+    try {
+        const result = await parseStringPromise(responseText);
+        const transactions =
+            result["soap:Envelope"]["soap:Body"][0][
+                "tns:GetAllTransactionsByAccountIdResponse"
+            ][0]["tns:transactions"][0]["tns:transactions"];
+        console.log(transactions);
+
+        const formattedTransactions = transactions.map((transaction) => ({
+            _id: transaction.ID[0],
+            senderId: transaction.SenderID[0],
+            receiverId: transaction.ReceiverID[0],
+            amount: transaction.Amount[0],
+            updatedAt: transaction.UpdatedAt[0],
+            createdAt: transaction.CreatedAt[0],
+        }));
+
         res.status(200).json({
             status: "success",
             data: {
-                transactions: data.data.transactions,
+                transactions: formattedTransactions,
             },
         });
-    } else {
-        res.status(response.status).json({
-            status: "fail",
-            message: data.message,
-        });
+    } catch (err) {
+        next(new AppError("Failed to parse SOAP response", 500));
     }
 });
 
 exports.topup = catchAsync(async (req, res, next) => {
-
     const { accountNumber, code } = req.body;
 
     const { accountId } = await getAccountIdByNumber(accountNumber);
@@ -210,5 +268,4 @@ exports.topup = catchAsync(async (req, res, next) => {
             message: data.message,
         });
     }
-
 });

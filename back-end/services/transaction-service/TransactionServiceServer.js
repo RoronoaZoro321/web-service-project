@@ -17,7 +17,7 @@ app.listen(PORT, () => {
 });
 
 process.on("unhandledRejection", (err) => {
-    console.log("UNHANDLER REJECTION (Transaction service)! Shutting down...");
+    console.log("UNHANDLED REJECTION (Transaction service)! Shutting down...");
     console.log(err.name, err.message);
     server.close(() => {
         process.exit(1);

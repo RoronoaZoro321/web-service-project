@@ -1,5 +1,7 @@
 const catchAsync = require("../../common/utils/catchAsync");
-const { getUserById } = require("../../services/user-service/controllers/userController");
+const {
+    getUserById,
+} = require("../../services/user-service/controllers/userController");
 
 function getUserId(req) {
     return req.user._id;
@@ -82,7 +84,6 @@ exports.updateMe = catchAsync(async (req, res, next) => {
 });
 
 exports.createAccount = catchAsync(async (req, res, next) => {
-
     req.body.userId = getUserId(req);
 
     const response = await fetch(
@@ -114,7 +115,6 @@ exports.createAccount = catchAsync(async (req, res, next) => {
 });
 
 exports.getAccountsByUserId = catchAsync(async (req, res, next) => {
-
     req.body.userId = getUserId(req);
 
     const response = await fetch(
