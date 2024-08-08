@@ -103,38 +103,6 @@ const soapService = {
     },
 };
 
-exports.topup = catchAsync(async (req, res, next) => {
-    const { accountId, code } = req.body;
-    const account = await Account.findById(accountId);
-
-    if (!account) {
-        return next(new AppError("Account not found", 400));
-    }
-
-    const topup = await Topup.findOne({ code });
-
-    if (!topup) {
-        return next(new AppError("Invalid code", 400));
-    }
-
-    if (topup.isUsed) {
-        return next(new AppError("Code already used", 400));
-    }
-
-    account.balance += topup.amount;
-    topup.isUsed = true;
-    await account.save();
-    await topup.save();
-
-    res.status(200).json({
-        status: "success",
-        data: {
-            message: "Topup successful",
-            account,
-        },
-    });
-});
-
 const startSoapServer = (app) => {
     soap.listen(
         app,

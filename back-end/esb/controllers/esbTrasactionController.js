@@ -225,44 +225,4 @@ exports.getAllTransactionsByAccountId = catchAsync(async (req, res, next) => {
     }
 });
 
-exports.topup = catchAsync(async (req, res, next) => {
-    const { accountNumber, code } = req.body;
 
-    const { accountId } = await getAccountIdByNumber(accountNumber);
-
-    // check if accountId belongs to the user
-    const isOwner = await checkAccountOwnership(getUserId(req), accountId);
-
-    if (!isOwner) {
-        return next(new AppError("You do not own the account", 400));
-    }
-
-    const response = await fetch(
-        `${process.env.TRANSACTION_SERVICE_URL}api/v1/transaction/topup`,
-        {
-            method: "PATCH",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ accountId, code }),
-        }
-    );
-
-    const data = await response.json();
-
-    console.log(data);
-
-    if (data.status === "success") {
-        res.status(200).json({
-            status: "success",
-            data: {
-                account: data.data.account,
-            },
-        });
-    } else {
-        res.status(response.status).json({
-            status: "fail",
-            message: data.message,
-        });
-    }
-});
