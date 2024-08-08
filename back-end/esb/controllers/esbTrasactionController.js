@@ -48,7 +48,7 @@ async function getAccountIdByNumber(accountNumber) {
 
         const data = await response.json();
 
-        console.log("data", data);
+        // console.log("data", data);
 
         return {
             accountId: data.data.account._id,
@@ -79,7 +79,7 @@ exports.transfer = catchAsync(async (req, res, next) => {
 
     // check if senderId belongs to the user
     const isSenderOwner = await checkAccountOwnership(userId, senderId);
-    console.log("isSenderOwner: ", isSenderOwner);
+    // console.log("isSenderOwner: ", isSenderOwner);
     if (!isSenderOwner) {
         return next(new AppError("You do not own the sender account", 400));
     }
@@ -91,79 +91,76 @@ exports.transfer = catchAsync(async (req, res, next) => {
         );
     }
 
-    const req_body = {
-        senderId,
-        receiverId,
-        amount,
-    };
+
+        /* <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:tran="http://example.com/transaction">
+            <soapenv:Header/>
+            <soapenv:Body>
+                <tran:TransferFunds>
+                    <tran:SenderID>66b091d271ac96106790fe68</tran:SenderID>
+                    <tran:ReceiverID>66b093701fa46f578141c5fb</tran:ReceiverID>
+                    <tran:Amount>100.00</tran:Amount>
+                </tran:TransferFunds>
+            </soapenv:Body>
+        </soapenv:Envelope> */
+
+    const xmlRequest = `
+        <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:tran="http://example.com/transfet">
+            <soapenv:Header/>
+            <soapenv:Body>
+                <tran:TransferFunds>
+                    <tran:SenderID>${senderId}</tran:SenderID>
+                    <tran:ReceiverID>${receiverId}</tran:ReceiverID>
+                    <tran:Amount>${amount}</tran:Amount>
+                </tran:TransferFunds>
+            </soapenv:Body>
+        </soapenv:Envelope>
+    `;
 
     const response = await fetch(
-        `${process.env.TRANSACTION_SERVICE_URL}api/v1/transaction/transfer`,
+        `${process.env.TRANSACTION_SERVICE_URL}api/v1/transaction`,
         {
             method: "POST",
             headers: {
-                "Content-Type": "application/json",
+                "Content-Type": "text/xml",
             },
-            body: JSON.stringify(req_body),
+            body: xmlRequest,
         }
     );
 
-    const data = await response.json();
+    const responseText = await response.text();
 
-    if (data.status === "success") {
+    console.log(responseText);
+
+    const hello = await parseStringPromise(responseText);
+    console.log(hello);
+
+    try {
+        const result = await parseStringPromise(responseText);
+        const transaction =
+            result["soap:Envelope"]["soap:Body"][0][
+                "tns:TransferFundsResponse"
+            ][0]["tns:transaction"][0];
+
+        const formattedTransaction = {
+            _id: transaction.ID[0],
+            senderId: transaction.SenderID[0],
+            receiverId: transaction.ReceiverID[0],
+            amount: transaction.Amount[0],
+            updatedAt: transaction.UpdatedAt[0],
+            createdAt: transaction.CreatedAt[0],
+        };
+
         res.status(200).json({
             status: "success",
             data: {
-                transaction: data.data.transaction,
+                transaction: formattedTransaction,
             },
         });
-    } else {
-        res.status(response.status).json({
-            status: "fail",
-            message: data.message,
-        });
+    }
+    catch (err) {
+        next(new AppError("Failed to parse SOAP response", 500));
     }
 });
-
-// exports.getAllTransactionsByAccountId = catchAsync(async (req, res, next) => {
-//     const { accountNumber } = req.body;
-
-//     const { accountId } = await getAccountIdByNumber(accountNumber);
-
-//     // check if accountId belongs to the user
-//     const isOwner = await checkAccountOwnership(getUserId(req), accountId);
-
-//     if (!isOwner) {
-//         return next(new AppError("You do not own the account", 400));
-//     }
-
-//     const response = await fetch(
-//         `${process.env.TRANSACTION_SERVICE_URL}api/v1/transaction/getAllTransactionsByAccountId`,
-//         {
-//             method: "POST",
-//             headers: {
-//                 "Content-Type": "application/json",
-//             },
-//             body: JSON.stringify({ accountId }),
-//         }
-//     );
-
-//     const data = await response.json();
-
-//     if (data.status === "success") {
-//         res.status(200).json({
-//             status: "success",
-//             data: {
-//                 transactions: data.data.transactions,
-//             },
-//         });
-//     } else {
-//         res.status(response.status).json({
-//             status: "fail",
-//             message: data.message,
-//         });
-//     }
-// });
 
 exports.getAllTransactionsByAccountId = catchAsync(async (req, res, next) => {
     const { accountNumber } = req.body;
@@ -206,7 +203,7 @@ exports.getAllTransactionsByAccountId = catchAsync(async (req, res, next) => {
             result["soap:Envelope"]["soap:Body"][0][
                 "tns:GetAllTransactionsByAccountIdResponse"
             ][0]["tns:transactions"][0]["tns:transactions"];
-        console.log(transactions);
+        // console.log(transactions);
 
         const formattedTransactions = transactions.map((transaction) => ({
             _id: transaction.ID[0],

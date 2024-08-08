@@ -13,6 +13,7 @@ const soapService = {
     TransactionService: {
         TransactionServicePort: {
             GetAllTransactions: async function (args) {
+                console.log("GetAllTransactions");
                 try {
                     const transactions = await Transaction.find();
                     return {
@@ -30,6 +31,7 @@ const soapService = {
                 }
             },
             TransferFunds: async function (args) {
+                console.log("TransferFunds");
                 const { SenderID, ReceiverID, Amount } = args;
                 try {
                     const senderAccount = await Account.findById(SenderID);
@@ -65,7 +67,7 @@ const soapService = {
                             SenderID: newTransaction.senderId.toString(),
                             ReceiverID: newTransaction.receiverId.toString(),
                             Amount: newTransaction.amount,
-                            UpdatedAt: t.updatedAt.toISOString(),
+                            UpdatedAt: newTransaction.updatedAt.toISOString(),
                             CreatedAt: newTransaction.createdAt.toISOString(),
                         },
                     };
@@ -74,6 +76,7 @@ const soapService = {
                 }
             },
             GetAllTransactionsByAccountId: async function (args) {
+                console.log("GetAllTransactionsByAccountId");
                 const { AccountID } = args;
                 try {
                     const transactions = await Transaction.find({
