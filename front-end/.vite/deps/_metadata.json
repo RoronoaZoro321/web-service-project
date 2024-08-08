@@ -1,0 +1,46 @@
+{
+  "hash": "b7774741",
+  "configHash": "72827fa9",
+  "lockfileHash": "5f9209da",
+  "browserHash": "99ad1522",
+  "optimized": {
+    "vue": {
+      "src": "../../node_modules/vue/dist/vue.runtime.esm-bundler.js",
+      "file": "vue.js",
+      "fileHash": "346710ef",
+      "needsInterop": false
+    },
+    "@vueform/vueform": {
+      "src": "../../node_modules/@vueform/vueform/dist/index.mjs",
+      "file": "@vueform_vueform.js",
+      "fileHash": "017ec433",
+      "needsInterop": false
+    },
+    "vue-router": {
+      "src": "../../node_modules/vue-router/dist/vue-router.mjs",
+      "file": "vue-router.js",
+      "fileHash": "fae86e37",
+      "needsInterop": false
+    },
+    "@vueform/vueform/locales/en": {
+      "src": "../../node_modules/@vueform/vueform/locales/en/index.mjs",
+      "file": "@vueform_vueform_locales_en.js",
+      "fileHash": "f6744159",
+      "needsInterop": false
+    },
+    "@vueform/vueform/dist/tailwind": {
+      "src": "../../node_modules/@vueform/vueform/dist/tailwind.mjs",
+      "file": "@vueform_vueform_dist_tailwind.js",
+      "fileHash": "31e9e4f5",
+      "needsInterop": false
+    }
+  },
+  "chunks": {
+    "chunk-AK3V2J6F": {
+      "file": "chunk-AK3V2J6F.js"
+    },
+    "chunk-NSBPE2FW": {
+      "file": "chunk-NSBPE2FW.js"
+    }
+  }
+}
