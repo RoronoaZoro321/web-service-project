@@ -8,6 +8,7 @@ import HonrizontalNav from "../app-layouts/NavHonrizontal.vue";
 import PIN from "../views/PINNeeded.vue";
 import Checkout from "../views/Checkout.vue";
 import Topup from "../views/TopUp.vue";
+
 const routes = [
     {
         path: "/",

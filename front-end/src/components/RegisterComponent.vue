@@ -48,6 +48,12 @@
                 :full="true"
                 size="lg"
                 :disabled="isLoading"
+                @click="showModal = true"
+            />
+            <RegisterSuccess
+                v-if="showModal"
+                :visible="showModal"
+                @close="showModal = false"
             />
         </Vueform>
         <Spinner v-if="isLoading" />
@@ -57,12 +63,14 @@
 <script setup>
 import { ref } from "vue";
 import { useRouter } from "vue-router";
+import RegisterSuccess from "../components/RegisterSuccess.vue";
 import axios from "axios";
 import Spinner from "./Spinner.vue";
 
 const form$ = ref(null);
 const isLoading = ref(false);
 const router = useRouter();
+const showModal = ref(false);
 
 const getFormData = () => {
     return {
@@ -96,11 +104,6 @@ const submit = async (data, form$) => {
         isLoading.value = false;
     }
 };
-
-const toggle = ref(false);
-function Confirm() {
-    toggle.value = !toggle.value;
-}
 </script>
 
 <style>
