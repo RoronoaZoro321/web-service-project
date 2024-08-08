@@ -13,6 +13,7 @@ const soapService = {
     TransactionService: {
         TransactionServicePort: {
             GetAllTransactions: async function (args) {
+                console.log("GetAllTransactions");
                 try {
                     const transactions = await Transaction.find();
                     return {
@@ -30,6 +31,7 @@ const soapService = {
                 }
             },
             TransferFunds: async function (args) {
+                console.log("TransferFunds");
                 const { SenderID, ReceiverID, Amount } = args;
                 try {
                     const senderAccount = await Account.findById(SenderID);
@@ -65,7 +67,7 @@ const soapService = {
                             SenderID: newTransaction.senderId.toString(),
                             ReceiverID: newTransaction.receiverId.toString(),
                             Amount: newTransaction.amount,
-                            UpdatedAt: t.updatedAt.toISOString(),
+                            UpdatedAt: newTransaction.updatedAt.toISOString(),
                             CreatedAt: newTransaction.createdAt.toISOString(),
                         },
                     };
@@ -74,6 +76,7 @@ const soapService = {
                 }
             },
             GetAllTransactionsByAccountId: async function (args) {
+                console.log("GetAllTransactionsByAccountId");
                 const { AccountID } = args;
                 try {
                     const transactions = await Transaction.find({
@@ -99,38 +102,6 @@ const soapService = {
         },
     },
 };
-
-exports.topup = catchAsync(async (req, res, next) => {
-    const { accountId, code } = req.body;
-    const account = await Account.findById(accountId);
-
-    if (!account) {
-        return next(new AppError("Account not found", 400));
-    }
-
-    const topup = await Topup.findOne({ code });
-
-    if (!topup) {
-        return next(new AppError("Invalid code", 400));
-    }
-
-    if (topup.isUsed) {
-        return next(new AppError("Code already used", 400));
-    }
-
-    account.balance += topup.amount;
-    topup.isUsed = true;
-    await account.save();
-    await topup.save();
-
-    res.status(200).json({
-        status: "success",
-        data: {
-            message: "Topup successful",
-            account,
-        },
-    });
-});
 
 const startSoapServer = (app) => {
     soap.listen(

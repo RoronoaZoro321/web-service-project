@@ -2,7 +2,9 @@ const express = require("express");
 const esbAuthController = require("../controllers/esbAuthController");
 const esbUserController = require("../controllers/esbUserController");
 const esbTransactionController = require("../controllers/esbTrasactionController")
+const esbTopupController = require("../controllers/esbTopupController")
 const protect = require("../middleware/protect");
+const adminProtect = require("../middleware/adminProtect");
 
 const router = express.Router();
 
@@ -12,7 +14,7 @@ router.post("/auth/login", esbAuthController.login);
 router.get("/auth/logout", esbAuthController.logout);
 
 // User Service
-router.get("/users/getAllUsers", protect, esbUserController.getAllUsers);
+router.get("/users/getAllUsers", adminProtect, esbUserController.getAllUsers);
 router.get("/users/profile", protect, esbUserController.getProfile);
 router.patch("/users/updateMe", protect, esbUserController.updateMe);
 
@@ -27,6 +29,8 @@ router.delete("/users/accounts/deleteAccountById", protect, esbUserController.de
 router.post("/transaction/transfer", protect, esbTransactionController.transfer)
 router.post("/transaction/MyAccTransactions", protect, esbTransactionController.getAllTransactionsByAccountId)
 
-router.patch("/transaction/topup", protect, esbTransactionController.topup)
+router.patch("/topup", protect, esbTopupController.topup)
+router.post("/topup/createTopup", adminProtect, esbTopupController.createTopup)
+router.get("/topup/getAllTopup", adminProtect, esbTopupController.getAllTopup)
 
 module.exports = router;
