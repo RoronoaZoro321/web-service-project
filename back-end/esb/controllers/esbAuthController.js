@@ -9,6 +9,9 @@ exports.signup = catchAsync(async (req, res, next) => {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify(req.body),
+            mode: "same-origin",
+            redirect: "follow",
+            credentials: "include",
         }
     );
 
@@ -52,6 +55,7 @@ exports.login = catchAsync(async (req, res, next) => {
     );
 
     const data = await response.json();
+
     const { token, cookieOptions } = data;
 
     if (data.status === "success") {
@@ -83,11 +87,13 @@ exports.logout = catchAsync(async (req, res, next) => {
         headers: {
             "Content-Type": "application/json",
         },
+        credentials: "include",
     });
 
     res.cookie("sessionId", "loggedout", {
         expires: new Date(Date.now() + 1 * 1000),
         httpOnly: true,
+        secure: process.env.NODE_ENV == "production",
     });
 
     res.status(200).json({

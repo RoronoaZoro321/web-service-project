@@ -51,7 +51,8 @@
                 :loading="isLoading"
             />
         </Vueform>
-        <AuthSuccess v-if="isSuccess" />
+        <AuthSuccess v-if="isSuccess" :responseData="responseData" />
+        <AuthFail v-if="isFail" :responseData="responseData" />
     </div>
 </template>
 
@@ -60,10 +61,12 @@ import { ref } from "vue";
 import { useRouter } from "vue-router";
 import AuthSuccess from "../components/AuthSuccess.vue";
 import axios from "axios";
+import AuthFail from "./AuthFail.vue";
 
 const form$ = ref(null);
 const isLoading = ref(false);
 const isSuccess = ref(false);
+const isFail = ref(false);
 const router = useRouter();
 
 const getFormData = () => {
@@ -98,7 +101,14 @@ const submit = async (data, form$) => {
             router.push("/balance");
         }, 3000);
     } catch (error) {
+        console.log(error.response);
+        isFail.value = true;
         console.error("Error:", error.response.data);
+
+        setTimeout(() => {
+            router.push("/Register");
+            isFail.value = false;
+        }, 3000);
     } finally {
         isLoading.value = false;
     }

@@ -15,8 +15,9 @@ const createSendToken = (user, statusCode, res) => {
         expires: new Date(
             Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
         ),
-        httpOnly: true, // Cookie cannot be accessed via JavaScript
+        // httpOnly: true, // Cookie cannot be accessed via JavaScript
         secure: process.env.NODE_ENV === "production", // Only send cookie over HTTPS in production
+        sameSite: "none",
     };
 
     res.status(statusCode).json({
@@ -67,9 +68,9 @@ exports.login = catchAsync(async (req, res, next) => {
 });
 
 exports.logout = (req, res) => {
-    // res.cookie('sessionId', 'loggedout', {
-    //     expires: new Date(Date.now() + 10 * 1000),
-    //     httpOnly: true
+    // res.cookie("sessionId", "", {
+    //     expires: new Date(0),
+    //     httpOnly: true,
     // });
 
     res.status(200).json({ status: "success" });
