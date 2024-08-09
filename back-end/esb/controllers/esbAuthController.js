@@ -23,7 +23,8 @@ exports.signup = catchAsync(async (req, res, next) => {
         // don't send pin back to client
         data.data.user.pin = undefined;
 
-        res.cookie("jwt", token, cookieOptions);
+        res.cookie("sessionId", token, cookieOptions);
+
         res.status(response.status).json({
             status: "success",
             data: {
@@ -60,7 +61,8 @@ exports.login = catchAsync(async (req, res, next) => {
         // don't send pin back to client
         data.data.user.pin = undefined;
 
-        res.cookie("jwt", token, cookieOptions);
+        res.cookie("sessionId", token, cookieOptions);
+
         res.status(response.status).json({
             status: "success",
             data: {
@@ -83,7 +85,7 @@ exports.logout = catchAsync(async (req, res, next) => {
         },
     });
 
-    res.cookie("jwt", "loggedout", {
+    res.cookie("sessionId", "loggedout", {
         expires: new Date(Date.now() + 1 * 1000),
         httpOnly: true,
     });

@@ -22,19 +22,25 @@
             :full="true"
             size="lg"
             :disabled="isLoading"
+            :loading="isLoading"
         />
     </Vueform>
-    <Spinner v-if="isLoading" />
+    <AuthSuccess v-if="isSuccess" :responseData="responseData" />
+    <AuthFail v-if="isFail" :responseData="responseData" />
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, onBeforeMount } from "vue";
 import { useRouter } from "vue-router";
 import axios from "axios";
-import Spinner from "./Spinner.vue";
+import AuthSuccess from "./AuthSuccess.vue";
+import AuthFail from "./AuthFail.vue";
 
 const form$ = ref(null);
+const isSuccess = ref(false);
+const isFail = ref(false);
 const isLoading = ref(false);
+const responseData = ref(null);
 const router = useRouter();
 
 const getFormData = () => {
@@ -56,14 +62,34 @@ const submit = async (data, form$) => {
             { withCredentials: true }
         );
 
-        console.log("Success:", response.data);
-        router.push("/balance");
+        isSuccess.value = true;
+        responseData.value = response.data;
+
+        setTimeout(() => {
+            router.push("/balance");
+            isSuccess.value = false;
+        }, 3000);
     } catch (error) {
-        console.error("Error:", error.response.data);
+        isFail.value = true;
+        responseData.value = error.response.data;
+
+        setTimeout(() => {
+            router.push("/Login");
+            isFail.value = false;
+        }, 3000);
     } finally {
         isLoading.value = false;
     }
 };
+
+onBeforeMount(() => {
+    const jwtCookie = document.cookie
+        .split("; ")
+        .find((row) => row.startsWith("sessionId="));
+    if (jwtCookie) {
+        router.push("/balance");
+    }
+});
 </script>
 
 <style>

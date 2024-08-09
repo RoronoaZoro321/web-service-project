@@ -1,34 +1,18 @@
 <template>
-    <div class="spinner" v-if="loading">
+    <div class="spinner">
         <div class="double-bounce1"></div>
         <div class="double-bounce2"></div>
     </div>
 </template>
 
-<script>
-import { defineComponent, ref, toRefs } from "vue";
-
-export default defineComponent({
-    name: "Spinner",
-    props: {
-        loading: {
-            type: Boolean,
-            default: false,
-        },
-    },
-    setup(props) {
-        const { loading } = toRefs(props);
-        return { loading };
-    },
-});
-</script>
-
 <style scoped>
 .spinner {
+    z-index: 10000;
     width: 40px;
     height: 40px;
     position: relative;
-    margin: 100px auto;
+    margin: 0 auto;
+    margin-top: 2rem;
 }
 
 .double-bounce1,

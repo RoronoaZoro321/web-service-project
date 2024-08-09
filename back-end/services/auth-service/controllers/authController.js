@@ -3,11 +3,10 @@ const catchAsync = require("../../../common/utils/catchAsync");
 const jwt = require("jsonwebtoken");
 const AppError = require("../../../common/utils/appError");
 
-const signToken = (id) => {
-    return jwt.sign({ id }, process.env.JWT_SECRET, {
+const signToken = (id) =>
+    jwt.sign({ id }, process.env.JWT_SECRET, {
         expiresIn: process.env.JWT_EXPIRES_IN,
     });
-};
 
 const createSendToken = (user, statusCode, res) => {
     const token = signToken(user._id);
@@ -31,11 +30,12 @@ const createSendToken = (user, statusCode, res) => {
 };
 
 exports.signup = catchAsync(async (req, res, next) => {
-
     const { citizenId, name, email, pin } = req.body;
 
     if (!citizenId || !name || !email || !pin) {
-        return next(new AppError("Please provide citizenId, name, email, and pin!", 400));
+        return next(
+            new AppError("Please provide citizenId, name, email, and pin!", 400)
+        );
     }
 
     const newUser = await User.create({
@@ -66,9 +66,8 @@ exports.login = catchAsync(async (req, res, next) => {
     createSendToken(user, 200, res);
 });
 
-
 exports.logout = (req, res) => {
-    // res.cookie('jwt', 'loggedout', {
+    // res.cookie('sessionId', 'loggedout', {
     //     expires: new Date(Date.now() + 10 * 1000),
     //     httpOnly: true
     // });

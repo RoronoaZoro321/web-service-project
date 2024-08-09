@@ -1,9 +1,9 @@
 <template>
     <section
-        class="z-50 fixed inset-0 h-full w-full bg-gray-800 bg-opacity-80 overflow-hidden"
+        class="z-50 fixed inset-0 h-screen w-full bg-gray-800 bg-opacity-80 overflow-hidden"
     >
         <div
-            class="absolute z-50 left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 p-6 md:p-8 h-full"
+            class="flex items-center justify-center absolute z-50 left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 p-6 md:p-8 h-full"
         >
             <div class="bg-white w-full max-w-2xl rounded-xl mx-auto">
                 <div class="py-8">
@@ -16,65 +16,30 @@
                         <div class="flex justify-center">
                             <img src="../assets/pig.png" class="w-52" />
                         </div>
-                        <p
-                            class="text-left mb-8 px-8 lg:text-base max-w-md mx-auto"
-                        >
-                            Build a well-presented brand that everyone will
-                            love. Take care to develop resources continually and
-                            integrity them with previous projects.
+                        <p class="text-left px-8 lg:text-base max-w-md mx-auto">
+                            Welcome,
+                            <strong>{{
+                                responseData.data.detail.user.name
+                            }}</strong>
+                            to SuperLaika.
                         </p>
-                        <div class="flex justify-between mx-5">
-                            <Vueform add-class="vf-create-account">
-                                <ButtonElement
-                                    name="reset"
-                                    button-label="Back"
-                                    :columns="{
-                                        container: 6,
-                                    }"
-                                    :secondary="true"
-                                    @click="goto({ path: '/register' })"
-                                />
-                                <ButtonElement
-                                    name="success"
-                                    :submits="true"
-                                    button-label="Next"
-                                    :full="true"
-                                    :columns="{
-                                        container: 6,
-                                    }"
-                                    size="md"
-                                    @click="goto({ path: '/balance' })"
-                                />
-                            </Vueform>
-                        </div>
+                        <Spinner />
                     </div>
                 </div>
             </div>
         </div>
     </section>
 </template>
-<script lang="ts" setup>
-import { useRouter, useRoute } from "vue-router";
 
-const router = useRouter();
-const route = useRoute();
+<script setup>
+import { defineProps } from "vue";
+import Spinner from "./Spinner.vue";
 
-interface Page {
-    name: string;
-    path: string;
-    key: string;
-}
-function goto(page: Partial<Page>) {
-    if (page.name && page.name !== route.name) {
-        router.push({ name: page.name });
-        return;
-    }
-    if (page.path && page.path !== route.path) {
-        router.push({ path: page.path });
-        return;
-    }
-}
+const props = defineProps({
+    responseData: Object,
+});
 </script>
+
 <style>
 .vf-create-account *,
 .vf-create-account *:before,
