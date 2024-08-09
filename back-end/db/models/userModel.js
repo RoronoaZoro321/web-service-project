@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require("../db");
 const validator = require("validator");
 const bcrypt = require("bcryptjs");
 
@@ -6,6 +6,7 @@ const userSchema = new mongoose.Schema({
     citizenId: {
         type: String,
         required: [true, "Please insert your citizen card id"],
+        unique: true,
     },
     name: {
         type: String,
@@ -19,35 +20,32 @@ const userSchema = new mongoose.Schema({
         validate: [validator.isEmail, "Please provide a valid email"],
     },
     photo: String,
-    password: {
+    pin: {
         type: String,
-        required: [true, "Please provide a password"],
-        minlength: 8,
+        required: [true, "Please provide a pin"],
+        minlength: 4,
         select: false,
     },
-    passwordConfirm: {
-        type: String,
-        required: [true, "Please confirm your password"],
-        validate: {
-            validator: function (el) {
-                return el === this.password;
-            },
-            message: "Passwords are not the same!",
+    accounts: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Account",
         },
-    },
+    ],
 });
 
 userSchema.pre("save", async function (next) {
-    console.log(this);
+    // Only run this function if pin was actually modified
+    if (!this.isModified("pin")) return next();
 
+    // Hash the pin with cost of 12
+    this.pin = await bcrypt.hash(this.pin, 12);
     next();
 });
 
-userSchema.methods.correctPassword = async function (
-    candidatePassword,
-    userPassword
-) {
-    return await bcrypt.compare(candidatePassword, userPassword);
+// Method to compare pin
+userSchema.methods.correctPin = async function (candidatePin, userPin) {
+    return await bcrypt.compare(candidatePin, userPin);
 };
 
 const User = mongoose.model("User", userSchema);

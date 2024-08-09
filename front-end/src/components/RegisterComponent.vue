@@ -61,6 +61,7 @@
   </Vueform>
   <RegisterSuccess v-if="showModal" :visible="showModal" @close="showModal = false" />
 </template>
+
 <script setup>
 import {ref} from 'vue'
 import RegisterSuccess from '../components/RegisterSuccess.vue';
@@ -73,6 +74,7 @@ function Confirm() {
 }
 
 </script>
+
 <style>
 .vf-create-account *,
 .vf-create-account *:before,

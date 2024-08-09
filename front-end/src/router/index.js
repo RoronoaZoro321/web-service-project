@@ -84,33 +84,32 @@ const routes = [
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
     routes,
-  });
+});
 
-  const auth = {
+const auth = {
     isLoggedIn() {
-      // Simulate an auth check (replace with real authentication logic)
+        // Simulate an auth check (replace with real authentication logic)
 
-      return !!localStorage.getItem('user');
-    }
-  };
-  
+        return !!localStorage.getItem("user");
+    },
+};
 
 // Global navigation guard
 router.beforeEach((to, from, next) => {
-  // Set document title based on route meta
-  if (to.meta.title) {
-    document.title = to.meta.title;
-  }
-  
-  // Check authentication
-  if (to.meta.requiresAuth && !auth.isLoggedIn()) {
-    next({
-      path: '/login',
-      query: { redirect: to.fullPath },
-    });
-  } else {
-    next();
-  }
+    // Set document title based on route meta
+    if (to.meta.title) {
+        document.title = to.meta.title;
+    }
+
+    // Check authentication
+    if (to.meta.requiresAuth && !auth.isLoggedIn()) {
+        next({
+            path: "/login",
+            query: { redirect: to.fullPath },
+        });
+    } else {
+        next();
+    }
 });
-  
+
 export default router;
