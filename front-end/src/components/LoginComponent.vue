@@ -88,6 +88,7 @@ onBeforeMount(() => {
     const jwtCookie = document.cookie
         .split("; ")
         .find((row) => row.startsWith("sessionId="));
+    console.log(jwtCookie);
     if (jwtCookie) {
         router.push("/balance");
     }
