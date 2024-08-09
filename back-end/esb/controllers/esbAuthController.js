@@ -64,8 +64,16 @@ exports.login = catchAsync(async (req, res, next) => {
 
         // don't send pin back to client
         data.data.user.pin = undefined;
+        
 
+        // set cookie to local storage
         res.cookie("sessionId", token, cookieOptions);
+        // const userSession = res.cookie("user", "John Doe");
+
+        // // set userSession to local storage
+        // localStorage.setItem("userSession", JSON.stringify(user.Session));
+
+        // console.log("userSession", userSession);
 
         res.status(response.status).json({
             status: "success",
