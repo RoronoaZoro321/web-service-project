@@ -9,7 +9,7 @@ export default defineConfig({
         port: 8000,
     },
     proxy: {
-        "/api/v1/esb/auth/login": {
+        "/api": {
             target: "http://127.0.0.1:3000",
             changeOrigin: true,
         },
