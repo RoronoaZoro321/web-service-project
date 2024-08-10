@@ -6,7 +6,7 @@
         <div class="flex flex-row ">
           <h2 class="px-2 ml-2 font-semibold">Roshy Smith</h2>
           <span class="pr-2 font-semibold">(123-234-345)</span>
-          <p>transfer  ฿ 100 to</p>
+          <p>transfer ฿ 100 to</p>
           <h2 class="mx-4 font-semibold">Roshy Smith</h2>
           <span class="font-semibold">(123-234-345)</span>
         </div>
