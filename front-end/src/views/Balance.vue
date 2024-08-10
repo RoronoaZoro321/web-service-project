@@ -1,5 +1,8 @@
 <template>
-    <div id="app">
+    <div v-if="isLoading">
+        <Spinner />
+    </div>
+    <div v-else id="app">
         <NavHonrizontal />
         <div
             class="relative bg-gradient-to-r from-blue-300 via-emerald-100 to-yellow-100 h-72"
@@ -19,9 +22,9 @@
                                 class="text-white w-full text-xl px-2 py-1 rounded"
                                 >123456789</span
                             >
-                            <span class="text-white px-2 py-1 rounded"
-                                >Roshy Smith</span
-                            >
+                            <span class="text-white px-2 py-1 rounded">{{
+                                userData?.data.user.name
+                            }}</span>
                         </div>
                     </div>
                 </div>
@@ -68,7 +71,11 @@ const WalletIcon = "fluent:wallet-16-filled";
 const TransferIcon = "wpf:bank-cards";
 import { useRouter, useRoute, RouterLink } from "vue-router";
 import { onMounted } from "vue";
+import axios from "axios";
+import Spinner from "../components/Spinner.vue";
 
+const userData = ref(null);
+const isLoading = ref(false);
 const router = useRouter();
 const route = useRoute();
 
@@ -93,7 +100,28 @@ onBeforeMount(() => {
 });
 
 onMounted(() => {
-    console.log("Mount");
+    const fetchUserData = async () => {
+        // fetch user data
+
+        isLoading.value = true;
+
+        try {
+            const response = await axios.get(
+                "http://127.0.0.1:3000/api/v1/esb/users/profile",
+                { withCredentials: true }
+            );
+
+            const data = await response.data;
+
+            userData.value = data;
+        } catch (error) {
+            console.log(error.response.data);
+        } finally {
+            isLoading.value = false;
+        }
+    };
+
+    fetchUserData();
 });
 </script>
 

@@ -70,7 +70,7 @@ const submit = async (data, form$) => {
         setTimeout(() => {
             router.push("/balance");
             isSuccess.value = false;
-        }, 3000);
+        }, 2000);
     } catch (error) {
         isFail.value = true;
         responseData.value = error.response.data;
@@ -78,7 +78,7 @@ const submit = async (data, form$) => {
         setTimeout(() => {
             router.push("/Login");
             isFail.value = false;
-        }, 3000);
+        }, 2000);
     } finally {
         isLoading.value = false;
     }
@@ -88,7 +88,6 @@ onBeforeMount(() => {
     const jwtCookie = document.cookie
         .split("; ")
         .find((row) => row.startsWith("sessionId="));
-    console.log(jwtCookie);
     if (jwtCookie) {
         router.push("/balance");
     }

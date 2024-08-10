@@ -17,7 +17,7 @@
                             <img src="../assets/pig.png" class="w-52" />
                         </div>
                         <p class="text-left px-8 lg:text-base max-w-md mx-auto">
-                            {{ responseData }}
+                            {{ responseData.message }}
                         </p>
                         <Spinner />
                     </div>
