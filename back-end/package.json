@@ -8,7 +8,7 @@
         "install:user-service": "cd services/user-service && npm install",
         "install:transaction-service": "cd services/transaction-service && npm install",
         "install:topup-service": "cd services/topup-service && npm install",
-        "install:all": "concurrently \"npm run install:esb\" \"npm run install:auth-service\" \"npm run install:user-service\" \"npm run install:transaction-service\" \"npm run install:topup-service\"",
+        "install:all": "concurrently \"npm run install:esb\" \"npm run install:db\" \"npm run install:auth-service\" \"npm run install:user-service\" \"npm run install:transaction-service\" \"npm run install:topup-service\"",
         "start:esb": "cd esb && npm run start:prod",
         "start:auth-service": "cd services/auth-service && npm run start:prod",
         "start:user-service": "cd services/user-service && npm run start:prod",

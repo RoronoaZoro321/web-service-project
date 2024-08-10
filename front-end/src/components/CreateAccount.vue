@@ -1,119 +1,49 @@
 <template>
-    <div>
-        <Vueform
-            ref="form$"
-            size="md"
-            :endpoint="false"
-            :display-errors="false"
-            add-class="vf-create-account"
-            @submit="submit"
+    <section
+        class="z-50 fixed inset-0 h-screen w-full bg-gray-800 bg-opacity-80 overflow-hidden"
+    >
+        <div
+            class="flex items-center justify-center absolute z-50 left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 p-6 md:p-8 h-full"
         >
-            <StaticElement
-                name="register_title"
-                tag="h3"
-                content="Register"
-                align="center"
-            />
-            <TextElement
-                name="Firstname"
-                placeholder="Enter Firstname"
-                label="Firstname"
-            />
-            <TextElement
-                name="Lastname"
-                placeholder="Enter Lastname"
-                label="Lastname"
-            />
-            <TextElement name="ID" label="ID" placeholder="Enter  ID Number" />
-            <TextElement name="PIN" input-type="password" label="PIN" />
-            <TextElement
-                name="email"
-                input-type="email"
-                :rules="['nullable', 'email']"
-                label="Email"
-            />
-            <FileElement
-                name="image"
-                label="Image"
-                accept="image/*"
-                view="image"
-                :rules="[
-                    'mimetypes:image/jpeg,image/png,image/gif,image/webp,image/svg+xml,image/tiff',
-                ]"
-            />
-            <ButtonElement
-                name="register"
-                :submits="true"
-                button-label="Register"
-                :full="true"
-                size="lg"
-                :disabled="isLoading"
-                :loading="isLoading"
-            />
-        </Vueform>
-
-        <AuthSuccess v-if="isSuccess" :responseData="responseData" />
-        <AuthFail v-if="isFail" :responseData="responseData" />
-    </div>
+            <div class="bg-white w-full max-w-2xl rounded-xl mx-auto">
+                <div class="py-8">
+                    <div class="container px-4 mx-auto">
+                        <h1
+                            v-if="!status"
+                            class="text-left px-8 md:text-xl text-rhino-700 font-semibold mb-6"
+                        >
+                            Oh! You have no account.
+                        </h1>
+                        <h1
+                            v-else
+                            class="text-left px-8 md:text-xl text-rhino-700 font-semibold mb-6"
+                        >
+                            Creating Successful!
+                        </h1>
+                        <div class="flex justify-center">
+                            <img src="../assets/pig.png" class="w-52" />
+                        </div>
+                        <p
+                            v-if="!status"
+                            class="text-left px-8 lg:text-base max-w-md mx-auto"
+                        >
+                            Please bear with us while we create your account...
+                        </p>
+                        <Spinner />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 </template>
 
 <script setup>
-import { ref } from "vue";
-import { useRouter } from "vue-router";
-import AuthSuccess from "../components/AuthSuccess.vue";
-import axios from "axios";
-import AuthFail from "./AuthFail.vue";
+import { defineProps } from "vue";
+import Spinner from "./Spinner.vue";
 
-const form$ = ref(null);
-const isLoading = ref(false);
-const isSuccess = ref(false);
-const isFail = ref(false);
-const router = useRouter();
-const responseData = ref(null);
-
-const getFormData = () => {
-    return {
-        name: `${form$.value.el$("Firstname").value} ${
-            form$.value.el$("Lastname").value
-        }`,
-        citizenId: form$.value.el$("ID").value,
-        pin: form$.value.el$("PIN").value,
-        email: form$.value.el$("email").value,
-        // image: form$.value.el$("image").value, // Handle file uploads appropriately if needed
-    };
-};
-
-const submit = async (data, form$) => {
-    isLoading.value = true;
-
-    const formData = getFormData();
-
-    try {
-        const response = await axios.post(
-            "http://127.0.0.1:3000/api/v1/esb/auth/signup",
-            formData,
-            { withCredentials: true }
-        );
-
-        isSuccess.value = true;
-        responseData.value = response.data;
-
-        setTimeout(() => {
-            isSuccess.value = false;
-            router.push("/balance");
-        }, 3000);
-    } catch (error) {
-        responseData.value = error.response.data;
-        isFail.value = true;
-
-        setTimeout(() => {
-            router.push("/Register");
-            isFail.value = false;
-        }, 3000);
-    } finally {
-        isLoading.value = false;
-    }
-};
+const props = defineProps({
+    status: Boolean,
+});
 </script>
 
 <style>
@@ -122,7 +52,7 @@ const submit = async (data, form$) => {
 .vf-create-account *:after,
 .vf-create-account:root {
     --vf-primary: #4f81c7;
-    --vf-primary-darker: #446fac;
+    --vf-primary-darker: #06ac8b;
     --vf-color-on-primary: #ffffff;
     --vf-danger: #ef4444;
     --vf-danger-lighter: #fee2e2;
@@ -130,7 +60,7 @@ const submit = async (data, form$) => {
     --vf-success-lighter: #d1fae5;
     --vf-gray-50: #f9fafb;
     --vf-gray-100: #f3f4f6;
-    --vf-gray-200: #e5e7eb;
+    --vf-gray-200: #ffdbd6;
     --vf-gray-300: #d1d5db;
     --vf-gray-400: #9ca3af;
     --vf-gray-500: #6b7280;
@@ -423,5 +353,6 @@ const submit = async (data, form$) => {
     --vf-slider-tooltip-arrow-size-sm: 0.3125rem;
     --vf-slider-tooltip-arrow-size-lg: 0.3125rem;
     --vf-border-color-signature-hr: var(--vf-gray-300);
+    --vf-size: sm;
 }
 </style>

@@ -9,9 +9,31 @@
                     class="bg-slate-200 w-8 h-4 flex justify-center rounded-xl"
                 />
             </div>
-            <div class="flex mx-2 hover:bg-slate-200 p-1 rounded-md flex-row">
-                <span class="mx-4">123-456-789</span>
-                <Iconify :icon="ArrowDown" class="text-gray-400 h-full" />
+            <div v-if="isLoading" class="relative">
+                <Spinner />
+            </div>
+            <div v-else class="relative">
+                <div
+                    class="flex mx-2 hover:bg-slate-200 p-1 rounded-md flex-row cursor-pointer"
+                    @click="toggleDropdown"
+                >
+                    <span class="mx-4">{{ store.currentAccount }}</span>
+                    <Iconify :icon="ArrowDown" class="text-gray-400 h-full" />
+                </div>
+
+                <div
+                    v-if="isOpen"
+                    class="absolute bg-white shadow-md rounded-md mt-1 w-full z-10"
+                >
+                    <div
+                        v-for="account in accounts"
+                        :key="account"
+                        class="px-4 py-2 hover:bg-slate-200 cursor-pointer"
+                        @click="selectAccount(account)"
+                    >
+                        {{ account.accountNumber }}
+                    </div>
+                </div>
             </div>
         </div>
         <div class="flex flex-row">
@@ -41,8 +63,31 @@ const BellIcon = "mingcute:notification-line";
 const ArrowDown = "iconamoon:arrow-down-2-duotone";
 import { useRouter } from "vue-router";
 import axios from "axios";
+import { onMounted, ref } from "vue";
+import Spinner from "../components/Spinner.vue";
+import { useStore } from "../store/store";
+
+const store = useStore();
 
 const router = useRouter();
+const isLoading = ref(false);
+const isOpen = ref(false);
+
+// Setup the state
+const accounts = ref([]); // Example accounts
+
+// Toggle the dropdown visibility
+const toggleDropdown = () => {
+    isOpen.value = !isOpen.value;
+};
+
+// Select an account and close the dropdown
+const selectAccount = (account) => {
+    store.currentAccount = account.accountNumber;
+    store.balance = account.balance;
+
+    isOpen.value = false;
+};
 
 const logout = async () => {
     try {
@@ -57,4 +102,12 @@ const logout = async () => {
         console.log("Error: " + error);
     }
 };
+
+onMounted(() => {
+    if (store.accountNumberList) {
+        accounts.value = store.accountNumberList.map((account) => account);
+    } else {
+        console.log("No accounts data available.");
+    }
+});
 </script>
