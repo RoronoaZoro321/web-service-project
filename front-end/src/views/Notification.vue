@@ -23,6 +23,6 @@
 <script setup>
 import NavHonrizontal from "../app-layouts/NavHonrizontal.vue";
 import NotificationComponent from "../components/NotificationComponent.vue";
-import { Icon, Icon as Iconify } from "@iconify/vue";
+import { Icon as Iconify } from "@iconify/vue";
 const ArrowDown = "iconamoon:arrow-down-2-duotone";
 </script>
