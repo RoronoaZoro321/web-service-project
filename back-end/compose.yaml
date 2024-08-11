@@ -3,6 +3,7 @@ version: '3.8'
 services:
   esb:
     container_name: esb
+    image: hellohasty/esb-image:latest
     build:
       context: .
       dockerfile: Dockerfile.esb
@@ -13,6 +14,7 @@ services:
 
   auth-service:
     container_name: auth-service
+    image: hellohasty/auth-service-image:latest
     build:
       context: .
       dockerfile: Dockerfile.auth-service
@@ -23,6 +25,7 @@ services:
 
   user-service:
     container_name: user-service
+    image: hellohasty/user-service-image:latest
     build:
       context: .
       dockerfile: Dockerfile.user-service
@@ -33,6 +36,7 @@ services:
 
   transaction-service:
     container_name: transaction-service
+    image: hellohasty/transaction-service-image:latest
     build:
       context: .
       dockerfile: Dockerfile.transaction-service
@@ -43,6 +47,7 @@ services:
 
   topup-service:
     container_name: topup-service
+    image: hellohasty/topup-service-image:latest
     build:
       context: .
       dockerfile: Dockerfile.topup-service
