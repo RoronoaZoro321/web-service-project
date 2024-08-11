@@ -49,17 +49,25 @@
             }"
         />
     </Vueform>
+
+    <TopupSuccess v-if="isSuccess" />
+    <TopupFail v-if="isFail" />
 </template>
 
 <script setup>
 import { Icon as Iconify } from "@iconify/vue";
+import TopupSuccess from "./TopupSuccess.vue";
+import TopupFail from "./TopupFail.vue";
 import { onMounted, ref } from "vue";
 const ArrowDown = "charm:arrow-down";
 import { useRouter, useRoute, RouterLink } from "vue-router";
 import { useStore } from "../store/store";
+import axios from "axios";
 
 const form$ = ref(null);
 const isSubmit = ref(false);
+const isSuccess = ref(false);
+const isFail = ref(false);
 const router = useRouter();
 const route = useRoute();
 const store = useStore();
@@ -83,9 +91,35 @@ function goto(page) {
 }
 
 const submit = async () => {
+    isSubmit.value = true;
+
     const formData = getFormData();
-    console.log(formData);
-    router.push("/topup");
+
+    try {
+        const response = await axios.patch(
+            "http://127.0.0.1:3000/api/v1/esb/topup",
+            formData,
+            { withCredentials: true }
+        );
+
+        const data = await response.data;
+
+        isSuccess.value = true;
+
+        setTimeout(() => {
+            isSuccess.value = false;
+            router.push("/balance");
+        }, 3000);
+    } catch (error) {
+        isFail.value = true;
+
+        setTimeout(() => {
+            isFail.value = false;
+            router.push("/balance");
+        }, 3000);
+    } finally {
+        isSubmit.value = false;
+    }
 };
 
 onMounted(() => {
