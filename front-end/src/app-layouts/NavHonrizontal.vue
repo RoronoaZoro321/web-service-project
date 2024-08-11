@@ -38,7 +38,8 @@
         </div>
         <div class="flex flex-row">
             <div
-                class="bg-slate-200 w-10 h-10 rounded-md flex items-center justify-center"
+                class="bg-slate-200 w-10 h-10 rounded-md flex items-center justify-center cursor-pointer"
+                @click="goto({ path: '/notification' })"
             >
                 <Iconify
                     :icon="BellIcon"
@@ -58,6 +59,9 @@
 
 <script setup>
 import { Icon as Iconify } from "@iconify/vue";
+import { useRouter, useRoute, RouterLink } from "vue-router";
+import { ref, onMounted, onUnmounted } from "vue";
+
 const ProfileIcon = "iconamoon:profile";
 const BellIcon = "mingcute:notification-line";
 const ArrowDown = "iconamoon:arrow-down-2-duotone";
