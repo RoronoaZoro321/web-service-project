@@ -33,12 +33,18 @@
                     >
                         {{ account.accountNumber }}
                     </div>
+                    <a
+                        href="#"
+                        class="block px-4 py-2 hover:bg-slate-200 dark:hover:text-BLACKTEXT rounded-md"
+                        >Create Account</a
+                    >
                 </div>
             </div>
         </div>
         <div class="flex flex-row">
             <div
-                class="bg-slate-200 w-10 h-10 rounded-md flex items-center justify-center"
+                class="bg-slate-200 w-10 h-10 rounded-md flex items-center justify-center cursor-pointer"
+                @click="goto({ path: '/notification' })"
             >
                 <Iconify
                     :icon="BellIcon"
@@ -58,15 +64,15 @@
 
 <script setup>
 import { Icon as Iconify } from "@iconify/vue";
-const ProfileIcon = "iconamoon:profile";
-const BellIcon = "mingcute:notification-line";
-const ArrowDown = "iconamoon:arrow-down-2-duotone";
-import { useRouter } from "vue-router";
+import { useRouter, useRoute, RouterLink } from "vue-router";
+import { ref, onMounted, onUnmounted } from "vue";
 import axios from "axios";
-import { onMounted, ref } from "vue";
 import Spinner from "../components/Spinner.vue";
 import { useStore } from "../store/store";
 
+const ProfileIcon = "iconamoon:profile";
+const BellIcon = "mingcute:notification-line";
+const ArrowDown = "iconamoon:arrow-down-2-duotone";
 const store = useStore();
 
 const router = useRouter();

@@ -65,21 +65,30 @@
         <AppFail v-if="isFail" :responseData="responseData" />
         <CreateAccount v-if="isCreating" :status="creatingStatus" />
     </div>
+    <div class="flex justify-center">
+      <div class=" border-solid border-2 border-slate-100 p-6 rounded-lg space-y-4 max-w-96">
+      <ShowReceive/>
+    </div>
+    </div>
+    
+  </div>
+
 </template>
 
 <script setup>
-import { ref, onBeforeMount } from "vue";
+import { ref, onBeforeMount,onMounted } from "vue";
 import NavHonrizontal from "../app-layouts/NavHonrizontal.vue";
 import { Icon as Iconify } from "@iconify/vue";
-const WalletIcon = "fluent:wallet-16-filled";
-const TransferIcon = "wpf:bank-cards";
 import { useRouter, useRoute, RouterLink } from "vue-router";
-import { onMounted } from "vue";
+import ShowReceive from "../components/ShowReceive.vue";
 import axios from "axios";
 import Spinner from "../components/Spinner.vue";
 import AppFail from "../components/AppFail.vue";
 import CreateAccount from "../components/CreateAccount.vue";
 import { useStore } from "../store/store";
+
+const WalletIcon = "fluent:wallet-16-filled";
+const TransferIcon = "wpf:bank-cards";
 
 const store = useStore();
 
