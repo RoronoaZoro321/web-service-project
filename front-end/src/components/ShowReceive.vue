@@ -63,8 +63,6 @@ onMounted(() => {
 
             const data = await response.data;
 
-            console.log(data.data.transactions);
-
             transactionData.value = data.data.transactions;
 
             if (transactionData.value.length > 0) haveData.value = true;

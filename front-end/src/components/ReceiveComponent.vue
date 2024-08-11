@@ -5,7 +5,7 @@
         </div>
         <div class="flex-grow">
             <div class="flex flex-row justify-between">
-                <h2 class="px-2 ml-2 font-semibold">Top up</h2>
+                <h2 class="px-2 ml-2 font-semibold">From Thatchapon</h2>
                 <span>+ ฿ {{ transactionData.amount }}</span>
             </div>
             <div class="flex justify-between">
@@ -19,7 +19,6 @@
 <script setup>
 import { Icon as Iconify } from "@iconify/vue";
 import { defineProps } from "vue";
-import Spinner from "./Spinner.vue";
 
 const DollarSign = "healthicons:dollar";
 

@@ -6,6 +6,17 @@ export const useStore = defineStore("account", () => {
     const accountNumberList = ref(null);
     const name = ref(null);
     const balance = ref(0);
+    const receiverAccountName = ref(null);
+    const receiverAccountNumber = ref(null);
+    const transferAmount = ref(null);
 
-    return { currentAccount, accountNumberList, name, balance };
+    return {
+        currentAccount,
+        accountNumberList,
+        name,
+        balance,
+        receiverAccountName,
+        receiverAccountNumber,
+        transferAmount,
+    };
 });

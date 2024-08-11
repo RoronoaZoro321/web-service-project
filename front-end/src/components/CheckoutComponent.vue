@@ -12,16 +12,20 @@
                 />
                 <div class="mb-8">
                     <h3>John Doe</h3>
-                    <h3 class="text-xs text-gray-400">123-456-***</h3>
+                    <h3 class="text-xs text-gray-400">
+                        {{ store.receiverAccountNumber }}
+                    </h3>
                 </div>
-                <span class="font-semibold text-xl"> ฿ 10,000</span>
+                <span class="font-semibold text-xl">
+                    ฿ {{ store.transferAmount }}</span
+                >
             </div>
         </div>
         <div
             class="mx-auto my-12 border-solid border flex w-full justify-between border-slate-200 p-2 rounded-lg"
         >
             <p class="text-sm text-gray-400">Your Account</p>
-            <span class="ml-6 text-sm">987-654-321</span>
+            <span class="ml-6 text-sm">{{ store.currentAccount }}</span>
         </div>
         <Vueform
             size="md"
@@ -31,7 +35,7 @@
             <ButtonElement
                 name="reset"
                 button-label="Back"
-                @click="goto({ path: '/transfer' })"
+                @click="goto({ path: '/balance' })"
                 :secondary="true"
                 :resets="true"
                 :columns="{
@@ -52,8 +56,14 @@
         </Vueform>
     </div>
 </template>
+
 <script setup>
 import { useRouter, useRoute, RouterLink } from "vue-router";
+import axios from "axios";
+import { onMounted, ref } from "vue";
+import { useStore } from "../store/store";
+
+const store = useStore();
 
 const router = useRouter();
 const route = useRoute();
@@ -68,4 +78,9 @@ function goto(page) {
         return;
     }
 }
+onMounted(() => {
+    if (!store.currentAccount) {
+        router.push("/balance");
+    }
+});
 </script>

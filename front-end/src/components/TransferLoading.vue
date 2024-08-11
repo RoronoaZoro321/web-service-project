@@ -1,144 +1,51 @@
 <template>
-    <Vueform
-        size="md"
-        :display-errors="false"
-        add-class="vf-create-account"
-        :endpoint="false"
-        ref="form$"
+    <section
+        class="z-50 fixed inset-0 h-screen w-full bg-gray-800 bg-opacity-80 overflow-hidden"
     >
-        <StaticElement
-            name="register_title"
-            tag="h3"
-            content="Transfer"
-            align="center"
-        />
-        <TextElement name="ID" label="To" placeholder="Bank Account Number" />
-        <TextElement
-            name="number"
-            input-type="number"
-            :rules="['nullable', 'numeric']"
-            autocomplete="off"
-            label="Amount"
-            placeholder="0.00"
-        />
-        <ButtonElement
-            name="reset"
-            button-label="Back"
-            @click="goto({ path: '/balance' })"
-            :secondary="true"
-            :resets="true"
-            :columns="{
-                container: 9,
-            }"
-        />
-        <ButtonElement
-            name="transfer"
-            :submits="true"
-            button-label="Next"
-            :full="true"
-            size="md"
-            :columns="{
-                container: 3,
-            }"
-            @click="toCheckout"
-        />
-    </Vueform>
-
-    <TransferFail v-if="isFail" />
-    <TransferLoading v-if="isSuccess" />
+        <div
+            class="absolute z-50 left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 p-6 md:p-8 h-full"
+        >
+            <div class="bg-white w-full max-w-2xl rounded-xl mx-auto">
+                <div class="py-8">
+                    <div class="container px-4 mx-auto">
+                        <div class="flex justify-center">
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="64"
+                                height="64"
+                                viewbox="0 0 64 64"
+                                fill="none"
+                            >
+                                <circle
+                                    opacity="0.3"
+                                    cx="32"
+                                    cy="32"
+                                    r="32"
+                                    fill="#54D769"
+                                ></circle>
+                                <circle
+                                    cx="32"
+                                    cy="32"
+                                    r="24"
+                                    fill="#54D769"
+                                ></circle>
+                                <path
+                                    d="M41.28 24.4655C41.0779 24.2969 40.8447 24.1695 40.5933 24.0911C40.3419 24.0127 40.0775 23.9842 39.8154 24.0083C39.5534 24.0321 39.2983 24.1072 39.0654 24.2299C38.8321 24.3522 38.6257 24.5194 38.4575 24.7218L29.8487 35.0499L25.3927 30.5939C25.015 30.2292 24.5093 30.0271 23.9844 30.0318C23.4596 30.0365 22.9576 30.247 22.5862 30.6183C22.2152 30.9893 22.0044 31.4914 22.0001 32.0165C21.9954 32.5414 22.1971 33.0471 22.5618 33.4244L28.5675 39.4301C28.7538 39.6165 28.975 39.7642 29.2186 39.8651C29.4623 39.9657 29.7234 40.0173 29.9868 40.0166H30.0769C30.3551 40.0042 30.6279 39.9342 30.8776 39.8102C31.1269 39.6865 31.3481 39.5119 31.5264 39.2981L41.5353 27.2867C41.7039 27.0846 41.8309 26.8514 41.9093 26.6003C41.9877 26.3493 42.0156 26.0852 41.9918 25.8231C41.968 25.5611 41.8929 25.3067 41.7706 25.0738C41.6482 24.8409 41.4813 24.6344 41.2793 24.4658L41.28 24.4655Z"
+                                    fill="#399247"
+                                ></path>
+                            </svg>
+                        </div>
+                        <p
+                            class="text-center my-4 px-8 font-semibold lg:text-lg max-w-md mx-auto"
+                        >
+                            Please wait while we proceed your information...
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 </template>
-
-<script setup>
-import { onMounted, ref } from "vue";
-import { useRouter, useRoute, RouterLink } from "vue-router";
-import { useStore } from "../store/store";
-import TransferFail from "./TransferFail.vue";
-import TransferLoading from "./TransferLoading.vue";
-import axios from "axios";
-
-const router = useRouter();
-const route = useRoute();
-const store = useStore();
-const isFail = ref(false);
-const isSuccess = ref(false);
-const form$ = ref(null);
-
-function goto(page) {
-    if (page.name && page.name !== route.name) {
-        router.push({ name: page.name });
-        return;
-    }
-    if (page.path && page.path !== route.path) {
-        router.push({ path: page.path });
-        return;
-    }
-}
-
-const getFormData = () => {
-    return {
-        id: form$.value.el$("ID").value,
-        number: form$.value.el$("number").value,
-    };
-};
-
-const toCheckout = async () => {
-    const formData = getFormData();
-
-    store.receiverAccountNumber = formData.id;
-    store.transferAmount = formData.number;
-
-    const reqData = { accountNumber: store.receiverAccountNumber };
-
-    if (!store.receiverAccountNumber || !store.transferAmount) {
-        isFail.value = true;
-
-        setTimeout(() => {
-            router.push("/balance");
-        }, 3000);
-    } else {
-        try {
-            const response = await axios.post(
-                "http://127.0.0.1:3000/api/v1/esb/users/accounts/getAccountByAccountNumber",
-                reqData,
-                { withCredentials: true }
-            );
-
-            const data = await response.data;
-
-            const userId = { accountId: data.data.account.userId };
-
-            const getUser = await axios.post(
-                "http://127.0.0.1:3000/api/v1/esb/users/getUserById",
-                userId,
-                { withCredentials: true }
-            );
-
-            const userData = await getUser.data;
-
-            isSuccess.value = true;
-
-            setTimeout(() => {
-                isSuccess.value = false;
-                router.push("/checkout");
-            }, 3000);
-        } catch (error) {
-            console.log(error);
-            isFail.value = true;
-
-            setTimeout(() => {
-                isFail.value = false;
-                router.push("/balance");
-            }, 3000);
-        }
-    }
-};
-
-onMounted(() => {
-    if (!store.currentAccount) {
-        router.push("/balance");
-    }
-});
-</script>
 
 <style>
 .vf-create-account *,
@@ -146,7 +53,7 @@ onMounted(() => {
 .vf-create-account *:after,
 .vf-create-account:root {
     --vf-primary: #4f81c7;
-    --vf-primary-darker: #4f81c7;
+    --vf-primary-darker: #06ac8b;
     --vf-color-on-primary: #ffffff;
     --vf-danger: #ef4444;
     --vf-danger-lighter: #fee2e2;
@@ -154,7 +61,7 @@ onMounted(() => {
     --vf-success-lighter: #d1fae5;
     --vf-gray-50: #f9fafb;
     --vf-gray-100: #f3f4f6;
-    --vf-gray-200: #e5e7eb;
+    --vf-gray-200: #ffdbd6;
     --vf-gray-300: #d1d5db;
     --vf-gray-400: #9ca3af;
     --vf-gray-500: #6b7280;
@@ -447,5 +354,6 @@ onMounted(() => {
     --vf-slider-tooltip-arrow-size-sm: 0.3125rem;
     --vf-slider-tooltip-arrow-size-lg: 0.3125rem;
     --vf-border-color-signature-hr: var(--vf-gray-300);
+    --vf-size: sm;
 }
 </style>
