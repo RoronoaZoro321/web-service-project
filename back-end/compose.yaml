@@ -1,0 +1,51 @@
+version: '3.8'
+
+services:
+  esb:
+    build:
+      context: .
+      dockerfile: Dockerfile.esb
+    ports:
+      - "3000:3000"
+    env_file:
+      - configs/config.env
+
+  auth-service:
+    build:
+      context: .
+      dockerfile: Dockerfile.auth-service
+    ports:
+      - "3001:3000"
+    env_file:
+      - configs/config.env
+
+  user-service:
+    build:
+      context: .
+      dockerfile: Dockerfile.user-service
+    ports:
+      - "3002:3002"
+    env_file:
+      - configs/config.env
+
+  transaction-service:
+    build:
+      context: .
+      dockerfile: Dockerfile.transaction-service
+    ports:
+      - "3003:3003"
+    env_file:
+      - configs/config.env
+
+  topup-service:
+    build:
+      context: .
+      dockerfile: Dockerfile.topup-service
+    ports:
+      - "3004:3004"
+    env_file:
+      - configs/config.env
+
+networks:
+  default:
+    driver: bridge
