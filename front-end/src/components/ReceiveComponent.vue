@@ -6,7 +6,7 @@
         <div class="flex-grow">
             <div class="flex flex-row justify-between">
                 <h2 class="px-2 ml-2 font-semibold">Top up</h2>
-                <span>+ ฿ 100</span>
+                <span>+ ฿ {{ transactionData.amount }}</span>
             </div>
             <div class="flex justify-between">
                 <p class="px-4 text-gray-400">yesterday 12:03 pm</p>
