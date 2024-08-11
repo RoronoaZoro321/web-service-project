@@ -1,7 +1,4 @@
 const catchAsync = require("../../common/utils/catchAsync");
-const {
-    getUserById,
-} = require("../../services/user-service/controllers/userController");
 
 function getUserId(req) {
     return req.user._id;

@@ -1,0 +1,15 @@
+FROM node:22-alpine3.19
+
+WORKDIR /opt/program
+
+RUN ls
+
+COPY configs /opt/program/configs
+COPY common /opt/program/common
+COPY esb /opt/program/esb
+
+WORKDIR /opt/program/esb
+
+RUN npm install
+
+ENTRYPOINT [ "npm", "start" ]
