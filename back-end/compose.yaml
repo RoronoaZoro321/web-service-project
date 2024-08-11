@@ -2,6 +2,7 @@ version: '3.8'
 
 services:
   esb:
+    container_name: esb
     build:
       context: .
       dockerfile: Dockerfile.esb
@@ -11,15 +12,17 @@ services:
       - configs/config.env
 
   auth-service:
+    container_name: auth-service
     build:
       context: .
       dockerfile: Dockerfile.auth-service
     ports:
-      - "3001:3000"
+      - "3001:3001"
     env_file:
       - configs/config.env
 
   user-service:
+    container_name: user-service
     build:
       context: .
       dockerfile: Dockerfile.user-service
@@ -29,6 +32,7 @@ services:
       - configs/config.env
 
   transaction-service:
+    container_name: transaction-service
     build:
       context: .
       dockerfile: Dockerfile.transaction-service
@@ -38,6 +42,7 @@ services:
       - configs/config.env
 
   topup-service:
+    container_name: topup-service
     build:
       context: .
       dockerfile: Dockerfile.topup-service

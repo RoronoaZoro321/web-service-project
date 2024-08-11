@@ -19,7 +19,7 @@ app.use(helmet());
 // Use the CORS middleware
 app.use(
     cors({
-        origin: "http://127.0.0.1:3000",
+        origin: "http://esb:3000/",
         credentials: true,
     })
 );
