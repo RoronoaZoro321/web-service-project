@@ -41,7 +41,10 @@
                             Transfer Successful!
                         </p>
                         <div class="flex justify-center mx-5">
-                            <Vueform add-class="vf-create-account">
+                            <Vueform
+                                add-class="vf-create-account"
+                                :endpoint="false"
+                            >
                                 <ButtonElement
                                     name="success"
                                     :submits="true"
