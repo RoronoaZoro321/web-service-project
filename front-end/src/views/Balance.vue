@@ -66,17 +66,16 @@
         <CreateAccount v-if="isCreating" :status="creatingStatus" />
     </div>
     <div class="flex justify-center">
-      <div class=" border-solid border-2 border-slate-100 p-6 rounded-lg space-y-4 max-w-96">
-      <ShowReceive/>
+        <div
+            class="border-solid border-2 border-slate-100 p-6 rounded-lg space-y-4 w-[32rem]"
+        >
+            <ShowReceive v-if="isLoadingTransaction" />
+        </div>
     </div>
-    </div>
-    
-  </div>
-
 </template>
 
 <script setup>
-import { ref, onBeforeMount,onMounted } from "vue";
+import { ref, onBeforeMount, onMounted } from "vue";
 import NavHonrizontal from "../app-layouts/NavHonrizontal.vue";
 import { Icon as Iconify } from "@iconify/vue";
 import { useRouter, useRoute, RouterLink } from "vue-router";
@@ -101,6 +100,7 @@ const isFail = ref(false);
 const isCreating = ref(false);
 const creatingStatus = ref(false);
 const accountsData = ref(null);
+const isLoadingTransaction = ref(false);
 
 function goto(page) {
     if (page.name && page.name !== route.name) {
@@ -219,14 +219,16 @@ onMounted(() => {
             store.accountNumberList = accountsList;
             store.currentAccount = accountsList[0].accountNumber;
             store.balance = accountsList[0].balance;
+
+            isLoadingTransaction.value = true;
         } catch (error) {
             console.log(error);
         }
     };
 
-    fetchUserData();
-
     fetchAccountData();
+
+    fetchUserData();
 });
 </script>
 

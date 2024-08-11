@@ -147,6 +147,8 @@ exports.transfer = catchAsync(async (req, res, next) => {
 exports.getAllTransactionsByAccountId = catchAsync(async (req, res, next) => {
     const { accountNumber } = req.body;
 
+    console.log(accountNumber);
+
     const { accountId } = await getAccountIdByNumber(accountNumber);
 
     const isOwner = await checkAccountOwnership(getUserId(req), accountId);

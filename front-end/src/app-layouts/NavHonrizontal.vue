@@ -33,11 +33,12 @@
                     >
                         {{ account.accountNumber }}
                     </div>
-                    <a
-                        href="#"
-                        class="block px-4 py-2 hover:bg-slate-200 dark:hover:text-BLACKTEXT rounded-md"
-                        >Create Account</a
+                    <div
+                        class="block px-4 py-2 hover:bg-slate-200 dark:hover:text-BLACKTEXT rounded-md cursor-pointer"
+                        @click="createNewAccount()"
                     >
+                        Create Account
+                    </div>
                 </div>
             </div>
         </div>
@@ -56,9 +57,11 @@
                 class="bg-blue-500 text-white text-sm rounded-md border-none p-2 cursor-pointer mx-2"
                 @click="logout"
             >
-                Logout
+                <p v-if="!isLogout">Logout</p>
+                <p v-else>Logging out...</p>
             </button>
         </div>
+        <CreateAccount v-if="isCreating" :status="creatingStatus" />
     </div>
 </template>
 
@@ -69,6 +72,7 @@ import { ref, onMounted, onUnmounted } from "vue";
 import axios from "axios";
 import Spinner from "../components/Spinner.vue";
 import { useStore } from "../store/store";
+import CreateAccount from "../components/CreateAccount.vue";
 
 const ProfileIcon = "iconamoon:profile";
 const BellIcon = "mingcute:notification-line";
@@ -78,9 +82,12 @@ const store = useStore();
 const router = useRouter();
 const isLoading = ref(false);
 const isOpen = ref(false);
+const isLogout = ref(false);
 
 // Setup the state
 const accounts = ref([]); // Example accounts
+const creatingStatus = ref(false);
+const isCreating = ref(false);
 
 // Toggle the dropdown visibility
 const toggleDropdown = () => {
@@ -95,11 +102,57 @@ const selectAccount = (account) => {
     isOpen.value = false;
 };
 
+const fetchUserData = async () => {
+    try {
+        const response = await axios.get(
+            "http://127.0.0.1:3000/api/v1/esb/users/profile",
+            { withCredentials: true }
+        );
+
+        const data = await response.data;
+
+        const userId = data.data.user._id;
+
+        return userId;
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+const createNewAccount = async () => {
+    try {
+        const userId = await fetchUserData();
+
+        await axios.post(
+            "http://127.0.0.1:3000/api/v1/esb/users/accounts/createAccount",
+            userId,
+            {
+                withCredentials: true,
+            }
+        );
+
+        isCreating.value = true;
+
+        setTimeout(() => {
+            creatingStatus.value = true;
+        }, 3000);
+
+        setTimeout(() => {
+            isCreating.value = false;
+            window.location.reload();
+        }, 6000);
+    } catch (error) {
+        console.log("Error: " + error);
+    }
+};
+
 const logout = async () => {
     try {
         await axios.get("http://127.0.0.1:3000/api/v1/esb/auth/logout", {
             withCredentials: true,
         });
+
+        isLogout.value = true;
 
         setTimeout(() => {
             router.push("/");
