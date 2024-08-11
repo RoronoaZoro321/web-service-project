@@ -38,8 +38,7 @@
                         <p
                             class="text-center my-4 px-8 font-semibold lg:text-lg max-w-md mx-auto"
                         >
-                            $ 320 has been <br />
-                            sent to Jane!
+                            Transfer Successful!
                         </p>
                         <div class="flex justify-center mx-5">
                             <Vueform add-class="vf-create-account">

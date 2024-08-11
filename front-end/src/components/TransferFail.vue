@@ -38,7 +38,7 @@
                         <p
                             class="text-center my-4 px-8 font-semibold lg:text-lg max-w-md mx-auto"
                         >
-                            Fail, Please provide all the input correctly.
+                            Transfer Fail!
                         </p>
                     </div>
                 </div>

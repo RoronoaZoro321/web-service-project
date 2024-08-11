@@ -11,7 +11,9 @@
                     class="rounded-full w-16 mb-4"
                 />
                 <div class="mb-8">
-                    <h3>John Doe</h3>
+                    <h3 class="text-center">
+                        {{ store.receiverAccountName }}
+                    </h3>
                     <h3 class="text-xs text-gray-400">
                         {{ store.receiverAccountNumber }}
                     </h3>
@@ -31,6 +33,7 @@
             size="md"
             :display-errors="false"
             add-class="vf-create-account"
+            :endpoint="false"
         >
             <ButtonElement
                 name="reset"
@@ -44,16 +47,18 @@
             />
             <ButtonElement
                 name="transfer"
-                :submits="true"
                 button-label="Next"
                 :full="true"
                 size="md"
                 :columns="{
                     container: 3,
                 }"
-                @click="goto({ path: '/checkout/transfersuccess' })"
+                @click="submit"
             />
         </Vueform>
+
+        <TransferSuccess v-if="isSuccess" />
+        <TransferFail v-if="isFail" />
     </div>
 </template>
 
@@ -62,9 +67,13 @@ import { useRouter, useRoute, RouterLink } from "vue-router";
 import axios from "axios";
 import { onMounted, ref } from "vue";
 import { useStore } from "../store/store";
+import TransferSuccess from "./TransferSuccess.vue";
+import TransferFail from "./TransferFail.vue";
 
 const store = useStore();
 
+const isSuccess = ref(false);
+const isFail = ref(false);
 const router = useRouter();
 const route = useRoute();
 
@@ -78,6 +87,42 @@ function goto(page) {
         return;
     }
 }
+
+const submit = async () => {
+    const formData = {
+        senderAccountNumber: store.currentAccount,
+        receiverAccountNumber: store.receiverAccountNumber,
+        amount: store.transferAmount,
+    };
+
+    try {
+        const response = await axios.post(
+            "http://127.0.0.1:3000/api/v1/esb/transaction/transfer",
+            formData,
+            { withCredentials: true }
+        );
+
+        const data = await response.data;
+
+        console.log(data);
+
+        isSuccess.value = true;
+
+        setTimeout(() => {
+            isSuccess.value = false;
+            router.push("/balance");
+        }, 3000);
+    } catch (error) {
+        console.log(error);
+        isFail.value = true;
+
+        setTimeout(() => {
+            isFail.value = false;
+            router.push("/balance");
+        }, 3000);
+    }
+};
+
 onMounted(() => {
     if (!store.currentAccount) {
         router.push("/balance");
