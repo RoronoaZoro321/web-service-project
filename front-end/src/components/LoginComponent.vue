@@ -64,8 +64,11 @@ const submit = async (data, form$) => {
             }
         );
 
+        const data = await response.data;
+        console.log(data);
+
         isSuccess.value = true;
-        responseData.value = response.data;
+        responseData.value = data;
 
         setTimeout(() => {
             router.push("/balance");

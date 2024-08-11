@@ -22,7 +22,7 @@
 import { Icon as Iconify } from "@iconify/vue";
 import ReceiveComponent from "./ReceiveComponent.vue";
 import { useRouter, useRoute } from "vue-router";
-import { onMounted, ref, computed } from "vue";
+import { onMounted, ref, computed, watch } from "vue";
 import { useStore } from "../store/store";
 import axios from "axios";
 
@@ -45,33 +45,42 @@ function goto(page) {
 
 const latestTransactions = computed(() => {
     if (transactionData.value) {
-        return transactionData.value.slice(-4).reverse();
+        console.log(transactionData.value);
+        return transactionData.value.slice(0, 4);
     }
     return [];
 });
 
+const fetchTransactionData = async () => {
+    try {
+        const response = await axios.post(
+            "http://127.0.0.1:3000/api/v1/esb/transaction/MyAccTransactions",
+            { accountNumber: store.currentAccount },
+            { withCredentials: true }
+        );
+
+        const data = await response.data;
+
+        transactionData.value = data.data.transactions;
+
+        if (transactionData.value.length > 0) haveData.value = true;
+    } catch (error) {
+        haveData.value = false;
+        console.log(error.response.data);
+        transactionData.value = null;
+    }
+};
+
 onMounted(() => {
-    const accountNumber = { accountNumber: store.currentAccount };
-
-    const fetchTransactionData = async () => {
-        try {
-            const response = await axios.post(
-                "http://127.0.0.1:3000/api/v1/esb/transaction/MyAccTransactions",
-                accountNumber,
-                { withCredentials: true }
-            );
-
-            const data = await response.data;
-
-            transactionData.value = data.data.transactions;
-
-            if (transactionData.value.length > 0) haveData.value = true;
-        } catch (error) {
-            console.log(error.response.data);
-            transactionData.value = null;
-        }
-    };
-
     fetchTransactionData();
 });
+
+watch(
+    () => store.currentAccount,
+    (newAccount, oldAccount) => {
+        if (newAccount !== oldAccount) {
+            fetchTransactionData();
+        }
+    }
+);
 </script>

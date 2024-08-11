@@ -90,7 +90,12 @@ const toCheckout = async () => {
 
     const reqData = { accountNumber: store.receiverAccountNumber };
 
-    if (!store.receiverAccountNumber || !store.transferAmount) {
+    if (
+        !store.receiverAccountNumber ||
+        !store.transferAmount ||
+        store.receiverAccountNumber.toString() ===
+            store.currentAccount.toString()
+    ) {
         isFail.value = true;
 
         setTimeout(() => {
@@ -105,7 +110,6 @@ const toCheckout = async () => {
             );
 
             const data = await response.data;
-
             const userId = { userId: data.data.account.userId };
 
             const getUser = await axios.post(
@@ -115,7 +119,6 @@ const toCheckout = async () => {
             );
 
             const userData = await getUser.data;
-
             store.receiverAccountName = userData.data.user.name;
 
             isSuccess.value = true;

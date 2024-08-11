@@ -90,12 +90,13 @@ function goto(page) {
 
 const submit = async () => {
     const formData = {
-        senderAccountNumber: store.currentAccount,
-        receiverAccountNumber: store.receiverAccountNumber,
-        amount: store.transferAmount,
+        senderAccountNumber: Number(store.currentAccount),
+        receiverAccountNumber: Number(store.receiverAccountNumber),
+        amount: Number(store.transferAmount),
     };
 
     try {
+        console.log(formData);
         const response = await axios.post(
             "http://127.0.0.1:3000/api/v1/esb/transaction/transfer",
             formData,
@@ -103,8 +104,6 @@ const submit = async () => {
         );
 
         const data = await response.data;
-
-        console.log(data);
 
         isSuccess.value = true;
 

@@ -75,7 +75,7 @@
 </template>
 
 <script setup>
-import { ref, onBeforeMount, onMounted } from "vue";
+import { ref, onBeforeMount, onMounted, watch } from "vue";
 import NavHonrizontal from "../app-layouts/NavHonrizontal.vue";
 import { Icon as Iconify } from "@iconify/vue";
 import { useRouter, useRoute, RouterLink } from "vue-router";
@@ -226,10 +226,27 @@ onMounted(() => {
         }
     };
 
-    fetchAccountData();
-
     fetchUserData();
+
+    fetchAccountData();
 });
+
+// Watch for changes in store.currentAccount
+watch(
+    () => store.currentAccount,
+    async (newAccount) => {
+        if (accountsData.value && newAccount) {
+            const selectedAccount = accountsData.value.data.accounts.find(
+                (account) => account.accountNumber === newAccount
+            );
+
+            if (selectedAccount) {
+                store.balance = selectedAccount.balance;
+                // Additional actions you want to perform with the selected account data
+            }
+        }
+    }
+);
 </script>
 
 <style scoped>
