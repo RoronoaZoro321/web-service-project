@@ -93,7 +93,7 @@ Check the status:
 Port forward:
 ```
 kubectl port-forward service/esb 3000:3000
-kubectl apply -f front-end-service.yaml -f front-end-deployment.yaml
+kubectl port-forward service/front-end 8000:8000
 ```
 
 To test the recovery of the pods, delete one of the pods:
