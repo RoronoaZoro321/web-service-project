@@ -1,0 +1,116 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -f compose.yaml
+    kompose.version: 1.34.0 (HEAD)
+  labels:
+    io.kompose.service: transaction-service
+  name: transaction-service
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      io.kompose.service: transaction-service
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert -f compose.yaml
+        kompose.version: 1.34.0 (HEAD)
+      labels:
+        io.kompose.service: transaction-service
+    spec:
+      containers:
+        - env:
+            - name: AUTH_PORT
+              valueFrom:
+                configMapKeyRef:
+                  key: AUTH_PORT
+                  name: config-env
+            - name: AUTH_SERVICE_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: AUTH_SERVICE_URL
+                  name: config-env
+            - name: CODE_SECRET_KEY
+              valueFrom:
+                configMapKeyRef:
+                  key: CODE_SECRET_KEY
+                  name: config-env
+            - name: DATABASE
+              valueFrom:
+                configMapKeyRef:
+                  key: DATABASE
+                  name: config-env
+            - name: DATABASE_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  key: DATABASE_PASSWORD
+                  name: config-env
+            - name: ESB_PORT
+              valueFrom:
+                configMapKeyRef:
+                  key: ESB_PORT
+                  name: config-env
+            - name: ESB_SERVICE_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: ESB_SERVICE_URL
+                  name: config-env
+            - name: JWT_COOKIE_EXPIRES_IN
+              valueFrom:
+                configMapKeyRef:
+                  key: JWT_COOKIE_EXPIRES_IN
+                  name: config-env
+            - name: JWT_EXPIRES_IN
+              valueFrom:
+                configMapKeyRef:
+                  key: JWT_EXPIRES_IN
+                  name: config-env
+            - name: JWT_SECRET
+              valueFrom:
+                configMapKeyRef:
+                  key: JWT_SECRET
+                  name: config-env
+            - name: NODE_ENV
+              valueFrom:
+                configMapKeyRef:
+                  key: NODE_ENV
+                  name: config-env
+            - name: TOPUP_PORT
+              valueFrom:
+                configMapKeyRef:
+                  key: TOPUP_PORT
+                  name: config-env
+            - name: TOPUP_SERVICE_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: TOPUP_SERVICE_URL
+                  name: config-env
+            - name: TRANSACTION_PORT
+              valueFrom:
+                configMapKeyRef:
+                  key: TRANSACTION_PORT
+                  name: config-env
+            - name: TRANSACTION_SERVICE_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: TRANSACTION_SERVICE_URL
+                  name: config-env
+            - name: USER_PORT
+              valueFrom:
+                configMapKeyRef:
+                  key: USER_PORT
+                  name: config-env
+            - name: USER_SERVICE_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: USER_SERVICE_URL
+                  name: config-env
+          image: hellohasty/transaction-service-image:latest
+          name: transaction-service
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 3003
+              protocol: TCP
+      restartPolicy: Always
