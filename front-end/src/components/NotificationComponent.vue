@@ -13,7 +13,7 @@
                         >({{ store.currentAccount }})</span
                     >
                     <p>transfer ฿ {{ transactionData.amount }} receive</p>
-                    <h2 class="mx-4 font-semibold">{{ showAccountName }}</h2>
+                    <h2 class="mx-2 font-semibold">{{ showAccountName }}</h2>
                     <span class="font-semibold">({{ showAccount }})</span>
                 </div>
                 <div v-else class="flex flex-row">
@@ -24,7 +24,7 @@
                         >({{ store.currentAccount }})</span
                     >
                     <p>transfer ฿ {{ transactionData.amount }} to</p>
-                    <h2 class="mx-4 font-semibold">{{ showAccountName }}</h2>
+                    <h2 class="mx-2 font-semibold">{{ showAccountName }}</h2>
                     <span class="font-semibold">({{ showAccount }})</span>
                 </div>
                 <div class="flex justify-between">
