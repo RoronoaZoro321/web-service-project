@@ -1,10 +1,12 @@
 services:
-  app:
+  front-end:
+    container_name: front-end
+    image: hellohasty/front-end:latest
     build:
       context: .
       dockerfile: Dockerfile
     ports:
       - "8000:8000"
-    volumes:
-      - .:/app
-    command: npm run dev
+    # volumes:
+    #   - .:/app
+    command: serve -s dist -l 8000

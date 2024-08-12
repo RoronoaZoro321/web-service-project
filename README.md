@@ -1,6 +1,8 @@
 # web-service-project
 
 
+
+
 # structure
 ```
 web-service-project/
@@ -24,6 +26,32 @@ web-service-project/
 │   └── common/
 ```
 
+# To convert the docker-compose.yml file to files that you can use with kubectl, run
+```
+kompose convert
+```
+
+# to run the project with docker
+
+```
+    cd front-end 
+        Verify your images are built and available:
+            docker images
+        if not 
+            docker build -t front-end .
+```
+
+# to run the project with docker-compose
+```
+    cd back-end/front-end 
+        Verify your images are built and available:
+            docker images
+        if not 
+            docker compose build
+
+        docker compose up
+```
+
 # to run the project with kubernetes
 
 start minikube
@@ -32,7 +60,7 @@ minikube start
 ```
 
 ```
-    cd backend 
+    cd back-end 
         Verify your images are built and available:
             docker images
         if not 
