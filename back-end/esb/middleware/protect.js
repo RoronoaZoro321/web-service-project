@@ -5,6 +5,7 @@ const catchAsync = require("../../common/utils/catchAsync");
 
 const protect = catchAsync(async (req, res, next) => {
     let token;
+    console.log(req.cookies);
     if (req.cookies && req.cookies.sessionId) {
         token = req.cookies.sessionId;
     }

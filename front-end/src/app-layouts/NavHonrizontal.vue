@@ -74,6 +74,8 @@
             @cancel="toggleDeleteConfirm"
             @confirm="handleDeleteConfirm"
         />
+
+        <DeleteAccSuccess v-if="isDeleteSuccess" />
     </div>
 </template>
 
@@ -86,6 +88,7 @@ import Spinner from "../components/Spinner.vue";
 import { useStore } from "../store/store";
 import CreateAccount from "../components/CreateAccount.vue";
 import DeleteConfirm from "../components/DeleteConfirm.vue";
+import DeleteAccSuccess from "../components/DeleteAccSuccess.vue";
 
 const ProfileIcon = "iconamoon:profile";
 const BellIcon = "mingcute:notification-line";
@@ -98,6 +101,7 @@ const isOpen = ref(false);
 const isLogout = ref(false);
 
 // Setup the state
+const isDeleteSuccess = ref(false);
 const isDeleting = ref(false);
 const accounts = ref([]); // Example accounts
 const creatingStatus = ref(false);
@@ -184,22 +188,16 @@ const deleteMyAccount = async () => {
         const accountData = await fetchAccountId.data;
         const accountId = accountData.data.account._id;
 
-        console.log(accountId);
-
         const deleteAccount = await axios.delete(
             "http://127.0.0.1:3000/api/v1/esb/users/accounts/deleteAccountById",
-            accountId,
-            { withCredentials: true }
+            { data: { accountId }, withCredentials: true }
         );
 
-        const deleteSuccess = await deleteAccount.data;
+        isDeleteSuccess.value = true;
 
-        console.log(deleteSuccess);
-
-        // Assuming you want to show a success message or perform some action after deletion
-        // You might want to update this part based on your requirements
         setTimeout(() => {
-            router.push("/balance");
+            isDeleteSuccess.value = false;
+            window.location.reload();
         }, 3000);
     } catch (error) {
         console.log(error);
