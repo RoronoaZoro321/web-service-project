@@ -1,7 +1,7 @@
 # web-service-project
 
 
-
+# enter 127.0.0.1:8000 
 
 # structure
 ```
@@ -69,6 +69,17 @@ minikube start
         kubectl apply -f auth-service-deployment.yaml -f esb-deployment.yaml -f topup-service-deployment.yaml -f transaction-service-deployment.yaml -f user-service-deployment.yaml
 ```
 
+for front-end
+```
+    cd front-end 
+        Verify your images are built and available:
+            docker images
+        if not 
+            docker build -t front-end .
+
+        kubectl apply -f front-end-service.yaml -f front-end-deployment.yaml
+```
+
 Delete the pods again to force a refresh:
 ```
     kubectl delete pods --all
@@ -82,9 +93,26 @@ Check the status:
 Port forward:
 ```
 kubectl port-forward service/esb 3000:3000
+kubectl apply -f front-end-service.yaml -f front-end-deployment.yaml
 ```
 
 To test the recovery of the pods, delete one of the pods:
 ```
 kubectl delete pod qsk-deploy-69996c4549-r59nl
 ```
+
+
+
+
+# error with kube
+
+if ErrImageNeverPull
+
+1.make sure the image name is the same
+2.make sure to add the imagePullPolicy: Never , if you are using local images(not in docker hub)
+3.make sure to rebuild image
+```
+docker build -t front-end .                                                                                                                             
+```
+
+

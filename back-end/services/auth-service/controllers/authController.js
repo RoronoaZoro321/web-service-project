@@ -17,8 +17,9 @@ const createSendToken = (user, statusCode, res) => {
         ),
         // httpOnly: true, // Cookie cannot be accessed via JavaScript
         // secure: process.env.NODE_ENV === "production", // Only send cookie over HTTPS in production
+        httpOnly: false,
         secure: false,
-        sameSite: "Lax",
+        sameSite: "None",
     };
 
     res.status(statusCode).json({
