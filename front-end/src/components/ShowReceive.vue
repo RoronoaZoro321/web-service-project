@@ -45,8 +45,8 @@ function goto(page) {
 
 const latestTransactions = computed(() => {
     if (transactionData.value) {
-        console.log(transactionData.value);
-        return transactionData.value.slice(0, 4);
+        // console.log(transactionData.value);
+        return transactionData.value.slice(-4).reverse();
     }
     return [];
 });
@@ -61,7 +61,11 @@ const fetchTransactionData = async () => {
 
         const data = await response.data;
 
-        transactionData.value = data.data.transactions;
+        const sortedTransactions = data.data.transactions.sort((a, b) => {
+            return new Date(a.createdAt) - new Date(b.createdAt);
+        });
+
+        transactionData.value = sortedTransactions;
 
         if (transactionData.value.length > 0) haveData.value = true;
     } catch (error) {

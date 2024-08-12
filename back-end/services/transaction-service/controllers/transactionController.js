@@ -35,7 +35,7 @@ const soapService = {
                 const { SenderID, ReceiverID, Amount } = args;
                 try {
                     const amountNum = Number(Amount);
-                    
+
                     const senderAccount = await Account.findById(SenderID);
                     const receiverAccount = await Account.findById(ReceiverID);
 
@@ -87,6 +87,7 @@ const soapService = {
                             { receiverId: AccountID },
                         ],
                     });
+
                     return {
                         transactions: transactions.map((t) => ({
                             ID: t._id.toString(),

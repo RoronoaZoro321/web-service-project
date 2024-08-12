@@ -96,7 +96,6 @@ const submit = async () => {
     };
 
     try {
-        console.log(formData);
         const response = await axios.post(
             "http://127.0.0.1:3000/api/v1/esb/transaction/transfer",
             formData,

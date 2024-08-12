@@ -113,6 +113,21 @@ function goto(page) {
     }
 }
 
+const fetchUserData = async () => {
+    try {
+        const response = await axios.get(
+            "http://127.0.0.1:3000/api/v1/esb/users/profile",
+            { withCredentials: true }
+        );
+
+        const data = await response.data;
+
+        userData.value = data;
+    } catch (error) {
+        console.log(error);
+    }
+};
+
 onBeforeMount(() => {
     // Handle no sessId
     const jwtCookie = document.cookie
@@ -235,6 +250,7 @@ onMounted(() => {
 watch(
     () => store.currentAccount,
     async (newAccount) => {
+        await fetchUserData();
         if (accountsData.value && newAccount) {
             const selectedAccount = accountsData.value.data.accounts.find(
                 (account) => account.accountNumber === newAccount
@@ -242,6 +258,7 @@ watch(
 
             if (selectedAccount) {
                 store.balance = selectedAccount.balance;
+                store.currentAccountName = userData.value.data.user.name;
                 // Additional actions you want to perform with the selected account data
             }
         }

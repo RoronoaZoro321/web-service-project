@@ -6,6 +6,7 @@ import Balance from "../views/Balance.vue";
 import Transfer from "../views/Transfer.vue";
 import Checkout from "../views/Checkout.vue";
 import Topup from "../views/TopUp.vue";
+import Notification from "../views/Notification.vue";
 
 const routes = [
     {
@@ -47,6 +48,11 @@ const routes = [
         path: "/topup",
         name: "Topup",
         component: Topup,
+    },
+    {
+        path: "/notification",
+        name: "Notification",
+        component: Notification,
     },
 ];
 

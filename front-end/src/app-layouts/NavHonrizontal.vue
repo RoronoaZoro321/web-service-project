@@ -39,13 +39,19 @@
                     >
                         Create Account
                     </div>
+                    <div
+                        class="block px-4 py-2 text-red-600 hover:bg-slate-200 rounded-md cursor-pointer"
+                        @click="toggleDeleteConfirm"
+                    >
+                        Delete Account
+                    </div>
                 </div>
             </div>
         </div>
         <div class="flex flex-row">
             <div
                 class="bg-slate-200 w-10 h-10 rounded-md flex items-center justify-center cursor-pointer"
-                @click="goto({ path: '/notification' })"
+                @click="toNotification()"
             >
                 <Iconify
                     :icon="BellIcon"
@@ -62,6 +68,12 @@
             </button>
         </div>
         <CreateAccount v-if="isCreating" :status="creatingStatus" />
+
+        <DeleteConfirm
+            v-if="isDeleting"
+            @cancel="toggleDeleteConfirm"
+            @confirm="handleDeleteConfirm"
+        />
     </div>
 </template>
 
@@ -73,6 +85,7 @@ import axios from "axios";
 import Spinner from "../components/Spinner.vue";
 import { useStore } from "../store/store";
 import CreateAccount from "../components/CreateAccount.vue";
+import DeleteConfirm from "../components/DeleteConfirm.vue";
 
 const ProfileIcon = "iconamoon:profile";
 const BellIcon = "mingcute:notification-line";
@@ -85,6 +98,7 @@ const isOpen = ref(false);
 const isLogout = ref(false);
 
 // Setup the state
+const isDeleting = ref(false);
 const accounts = ref([]); // Example accounts
 const creatingStatus = ref(false);
 const isCreating = ref(false);
@@ -102,6 +116,10 @@ const selectAccount = (account) => {
     isOpen.value = false;
 };
 
+const toNotification = (path) => {
+    router.push("/notification");
+};
+
 const fetchUserData = async () => {
     try {
         const response = await axios.get(
@@ -112,6 +130,8 @@ const fetchUserData = async () => {
         const data = await response.data;
 
         const userId = data.data.user._id;
+
+        const userName = data.data.user.name;
 
         return userId;
     } catch (error) {
@@ -126,9 +146,7 @@ const createNewAccount = async () => {
         await axios.post(
             "http://127.0.0.1:3000/api/v1/esb/users/accounts/createAccount",
             userId,
-            {
-                withCredentials: true,
-            }
+            { withCredentials: true }
         );
 
         isCreating.value = true;
@@ -143,6 +161,48 @@ const createNewAccount = async () => {
         }, 6000);
     } catch (error) {
         console.log("Error: " + error);
+    }
+};
+
+const toggleDeleteConfirm = () => {
+    isDeleting.value = !isDeleting.value;
+};
+
+const handleDeleteConfirm = async () => {
+    await deleteMyAccount();
+    toggleDeleteConfirm();
+};
+
+const deleteMyAccount = async () => {
+    try {
+        const fetchAccountId = await axios.post(
+            "http://127.0.0.1:3000/api/v1/esb/users/accounts/getAccountByAccountNumber",
+            { accountNumber: store.currentAccount },
+            { withCredentials: true }
+        );
+
+        const accountData = await fetchAccountId.data;
+        const accountId = accountData.data.account._id;
+
+        console.log(accountId);
+
+        const deleteAccount = await axios.delete(
+            "http://127.0.0.1:3000/api/v1/esb/users/accounts/deleteAccountById",
+            accountId,
+            { withCredentials: true }
+        );
+
+        const deleteSuccess = await deleteAccount.data;
+
+        console.log(deleteSuccess);
+
+        // Assuming you want to show a success message or perform some action after deletion
+        // You might want to update this part based on your requirements
+        setTimeout(() => {
+            router.push("/balance");
+        }, 3000);
+    } catch (error) {
+        console.log(error);
     }
 };
 

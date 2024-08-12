@@ -14,8 +14,11 @@
                 <span>+ ฿ {{ transactionData.amount }}</span>
             </div>
             <div class="flex justify-between">
-                <p class="px-4 text-gray-400">yesterday 12:03 pm</p>
-                <p class="text-gray-400">Deposit</p>
+                <p class="px-4 text-gray-400">
+                    {{ formatDate(transactionData.createdAt) }}
+                </p>
+                <p class="text-gray-400" v-if="isDeposit">Transfer In</p>
+                <p class="text-gray-400" v-else>Transfer Out</p>
             </div>
         </div>
     </div>
@@ -35,6 +38,20 @@ const showAccount = ref(null);
 const props = defineProps({
     transactionData: Object,
 });
+
+const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const day = date.getDate().toString().padStart(2, "0");
+    const month = (date.getMonth() + 1).toString().padStart(2, "0");
+    const year = date.getFullYear().toString().slice(-2);
+    let hours = date.getHours();
+    const minutes = date.getMinutes().toString().padStart(2, "0");
+    const ampm = hours >= 12 ? "PM" : "AM";
+    hours = hours % 12;
+    hours = hours ? hours : 12; // the hour '0' should be '12'
+    const formattedTime = `${hours}:${minutes} ${ampm}`;
+    return `${day}/${month}/${year}, ${formattedTime}`;
+};
 
 const fetchTransactionData = async () => {
     try {
@@ -68,8 +85,6 @@ const fetchTransactionData = async () => {
         const receiverUserAccount = await fetchReceiverUserAccount.data;
         const receiverAccountNumber =
             receiverUserAccount.data.account.accountNumber;
-
-        console.log(currentAccountId, senderAccountId, receiverAccountId);
 
         if (currentAccountId === senderAccountId) {
             // TO

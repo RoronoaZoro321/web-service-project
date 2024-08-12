@@ -3,6 +3,7 @@ import { ref } from "vue";
 
 export const useStore = defineStore("account", () => {
     const currentAccount = ref(null);
+    const currentAccountName = ref(null);
     const accountNumberList = ref(null);
     const name = ref(null);
     const balance = ref(0);
@@ -12,6 +13,7 @@ export const useStore = defineStore("account", () => {
 
     return {
         currentAccount,
+        currentAccountName,
         accountNumberList,
         name,
         balance,
