@@ -80,6 +80,9 @@ exports.getAccountsByUserId = catchAsync(async (req, res, next) => {
 exports.checkAccountOwnership = catchAsync(async (req, res, next) => {
     const { userId, accountId } = req.body;
 
+    console.log(userId);
+    console.log(accountId);
+
     const account = await Account.findById(accountId);
 
     if (!account || account.userId.toString() !== userId) {

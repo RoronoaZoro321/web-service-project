@@ -51,6 +51,7 @@
                 :loading="isLoading"
             />
         </Vueform>
+
         <AuthSuccess v-if="isSuccess" :responseData="responseData" />
         <AuthFail v-if="isFail" :responseData="responseData" />
     </div>
@@ -68,6 +69,7 @@ const isLoading = ref(false);
 const isSuccess = ref(false);
 const isFail = ref(false);
 const router = useRouter();
+const responseData = ref(null);
 
 const getFormData = () => {
     return {
@@ -94,16 +96,15 @@ const submit = async (data, form$) => {
         );
 
         isSuccess.value = true;
-        console.log("Success:", response.data);
+        responseData.value = response.data;
 
         setTimeout(() => {
             isSuccess.value = false;
             router.push("/balance");
         }, 3000);
     } catch (error) {
-        console.log(error.response);
+        responseData.value = error.response.data;
         isFail.value = true;
-        console.error("Error:", error.response.data);
 
         setTimeout(() => {
             router.push("/Register");

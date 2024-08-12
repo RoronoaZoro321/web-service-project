@@ -16,8 +16,9 @@ const createSendToken = (user, statusCode, res) => {
             Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
         ),
         // httpOnly: true, // Cookie cannot be accessed via JavaScript
-        secure: process.env.NODE_ENV === "production", // Only send cookie over HTTPS in production
-        sameSite: "none",
+        // secure: process.env.NODE_ENV === "production", // Only send cookie over HTTPS in production
+        secure: false,
+        sameSite: "Lax",
     };
 
     res.status(statusCode).json({

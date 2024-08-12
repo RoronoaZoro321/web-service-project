@@ -17,9 +17,10 @@ const app = express();
 app.use(helmet());
 
 // Use the CORS middleware
+// Use the CORS middleware
 app.use(
     cors({
-        origin: "http://127.0.0.1:3000",
+        origin: "http://esb:3000/",
         credentials: true,
     })
 );
@@ -30,15 +31,15 @@ if (process.env.NODE_ENV === "development") {
 }
 
 // Limit requests from same API
-const limiter = rateLimit({
-    max: 100,
-    windowMs: 60 * 60 * 1000,
-    message: "Too many requests from this IP, please try again in an hour!",
-});
-app.use("/api", limiter);
+// const limiter = rateLimit({
+//     max: 1000,
+//     windowMs: 60 * 60 * 10000,
+//     message: "Too many requests from this IP, please try again in an hour!",
+// });
+// app.use("/api", limiter);
 
 // Body parser, reading data from body into req.body
-app.use(express.json({ limit: "10kb" }));
+app.use(express.json({ limit: "100kb" }));
 
 // Data sanitization against NoSQL query injection
 app.use(mongoSanitize());

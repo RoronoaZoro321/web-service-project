@@ -4,10 +4,9 @@ import Register from "../views/Register.vue";
 import Login from "../views/Login.vue";
 import Balance from "../views/Balance.vue";
 import Transfer from "../views/Transfer.vue";
-import HonrizontalNav from "../app-layouts/NavHonrizontal.vue";
-import PIN from "../views/PINNeeded.vue";
 import Checkout from "../views/Checkout.vue";
 import Topup from "../views/TopUp.vue";
+import Notification from "../views/Notification.vue";
 
 const routes = [
     {
@@ -41,11 +40,6 @@ const routes = [
         component: Transfer,
     },
     {
-        path: "/pin",
-        name: "PIN",
-        component: PIN,
-    },
-    {
         path: "/checkout",
         name: "Checkout",
         component: Checkout,
@@ -54,6 +48,11 @@ const routes = [
         path: "/topup",
         name: "Topup",
         component: Topup,
+    },
+    {
+        path: "/notification",
+        name: "Notification",
+        component: Notification,
     },
 ];
 

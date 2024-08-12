@@ -91,18 +91,6 @@ exports.transfer = catchAsync(async (req, res, next) => {
         );
     }
 
-
-        /* <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:tran="http://example.com/transaction">
-            <soapenv:Header/>
-            <soapenv:Body>
-                <tran:TransferFunds>
-                    <tran:SenderID>66b091d271ac96106790fe68</tran:SenderID>
-                    <tran:ReceiverID>66b093701fa46f578141c5fb</tran:ReceiverID>
-                    <tran:Amount>100.00</tran:Amount>
-                </tran:TransferFunds>
-            </soapenv:Body>
-        </soapenv:Envelope> */
-
     const xmlRequest = `
         <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:tran="http://example.com/transfet">
             <soapenv:Header/>
@@ -129,11 +117,6 @@ exports.transfer = catchAsync(async (req, res, next) => {
 
     const responseText = await response.text();
 
-    console.log(responseText);
-
-    const hello = await parseStringPromise(responseText);
-    console.log(hello);
-
     try {
         const result = await parseStringPromise(responseText);
         const transaction =
@@ -156,8 +139,7 @@ exports.transfer = catchAsync(async (req, res, next) => {
                 transaction: formattedTransaction,
             },
         });
-    }
-    catch (err) {
+    } catch (err) {
         next(new AppError("Failed to parse SOAP response", 500));
     }
 });
@@ -224,5 +206,3 @@ exports.getAllTransactionsByAccountId = catchAsync(async (req, res, next) => {
         next(new AppError("Failed to parse SOAP response", 500));
     }
 });
-
-

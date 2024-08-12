@@ -34,6 +34,8 @@ const soapService = {
                 console.log("TransferFunds");
                 const { SenderID, ReceiverID, Amount } = args;
                 try {
+                    const amountNum = Number(Amount);
+
                     const senderAccount = await Account.findById(SenderID);
                     const receiverAccount = await Account.findById(ReceiverID);
 
@@ -41,17 +43,17 @@ const soapService = {
                         throw new AppError("Account not found", 400);
                     }
 
-                    if (senderAccount.balance < Amount) {
+                    if (senderAccount.balance < amountNum) {
                         throw new AppError("Insufficient funds", 400);
                     }
 
-                    senderAccount.balance -= Amount;
-                    receiverAccount.balance += Amount;
+                    senderAccount.balance -= amountNum;
+                    receiverAccount.balance += amountNum;
 
                     const newTransaction = await Transaction.create({
                         senderId: SenderID.toString(),
                         receiverId: ReceiverID.toString(),
-                        amount: Amount,
+                        amount: amountNum,
                     });
 
                     senderAccount.transactionIds.push(newTransaction._id);
@@ -85,6 +87,7 @@ const soapService = {
                             { receiverId: AccountID },
                         ],
                     });
+
                     return {
                         transactions: transactions.map((t) => ({
                             ID: t._id.toString(),

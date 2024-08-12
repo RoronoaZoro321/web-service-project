@@ -100,8 +100,8 @@ exports.logout = catchAsync(async (req, res, next) => {
 
     res.cookie("sessionId", "loggedout", {
         expires: new Date(Date.now() + 1 * 1000),
-        httpOnly: true,
-        secure: process.env.NODE_ENV == "production",
+        httpOnly: false,
+        // secure: process.env.NODE_ENV == "production",
     });
 
     res.status(200).json({

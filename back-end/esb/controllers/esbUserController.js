@@ -1,7 +1,4 @@
 const catchAsync = require("../../common/utils/catchAsync");
-const {
-    getUserById,
-} = require("../../services/user-service/controllers/userController");
 
 function getUserId(req) {
     return req.user._id;
@@ -232,6 +229,35 @@ exports.deleteAccountById = catchAsync(async (req, res, next) => {
         res.status(response.status).json({
             status: "fail",
             message: data.message || "Failed to delete account",
+        });
+    }
+});
+
+exports.getUserById = catchAsync(async (req, res, next) => {
+    const response = await fetch(
+        `${process.env.USER_SERVICE_URL}api/v1/users/getUserById`,
+        {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(req.body),
+        }
+    );
+
+    const data = await response.json();
+
+    if (data.status === "success") {
+        res.status(200).json({
+            status: "success",
+            data: {
+                user: data.data.user,
+            },
+        });
+    } else {
+        res.status(response.status).json({
+            status: "fail",
+            message: data.message,
         });
     }
 });

@@ -38,24 +38,8 @@
                         <p
                             class="text-center my-4 px-8 font-semibold lg:text-lg max-w-md mx-auto"
                         >
-                            $ 320 has been <br />
-                            sent to Jane!
+                            Transfer Successful!
                         </p>
-                        <div class="flex justify-center mx-5">
-                            <Vueform add-class="vf-create-account">
-                                <ButtonElement
-                                    name="success"
-                                    :submits="true"
-                                    button-label="Next"
-                                    :full="true"
-                                    :columns="{
-                                        container: 12,
-                                    }"
-                                    size="md"
-                                    @click="goto({ path: '/balance' })"
-                                />
-                            </Vueform>
-                        </div>
                     </div>
                 </div>
             </div>

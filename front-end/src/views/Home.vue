@@ -1,4 +1,10 @@
 <template>
+    <div class="absolute bottom-0 left-0">
+        <img src="../assets/leftpic.png" class="w-1/2 h-auto" />
+    </div>
+    <!-- <div class="absolute top-0 right-0 z-20">
+    <img src="../assets/rightpic.png" class="w-[50%] h-auto" />
+  </div> -->
     <div class="h-screen flex items-center justify-center relative">
         <div
             class="inset-x-0 -z-10 transform-gpu blur-3xl sm:-top-80 relative overflow-hidden"
@@ -28,6 +34,7 @@
                 "
             ></div>
         </div>
+
         <div class="absolute">
             <h1 class="sm:text-4xl font-bold text-center">
                 Experience seamless banking at
@@ -39,6 +46,7 @@
                 <button
                     type="button"
                     class="text-white bg-BLUE hover:bg-blue-500 focus:ring-2 focus:ring-blue-300 justify-items-stretch font-medium rounded-lg text-sm px-24 py-1.5 me-2 mb-2"
+                    @click="goto({ path: '/register' })"
                 >
                     Register
                 </button>

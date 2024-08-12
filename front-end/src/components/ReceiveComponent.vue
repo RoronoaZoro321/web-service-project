@@ -1,43 +1,27 @@
 <template>
-    <div class="p-2 rounded-md hover:bg-sky-50">
-        <div class="flex flex-row text-BLACKTEXT">
-            <div class="rounded-lg w-12">
-                <img src="../assets/profile.png" />
+    <div class="flex flex-row text-BLACKTEXT bg-indigo-50 p-2 rounded-md mb-2">
+        <div class="rounded-lg w-12 flex items-center justify-center">
+            <Iconify :icon="DollarSign" class="w-8 h-8" />
+        </div>
+        <div class="flex-grow">
+            <div class="flex flex-row justify-between">
+                <h2 class="px-2 ml-2 font-semibold" v-if="isDeposit">
+                    <span class="text-lime-600">From</span> {{ showAccount }}
+                </h2>
+                <h2 class="px-2 ml-2 font-semibold" v-else>
+                    <span class="text-red-600">To</span> {{ showAccount }}
+                </h2>
+                <span>+ ฿ {{ transactionData.amount }}</span>
             </div>
-            <div class="flex-grow">
-                <div v-if="isDeposit" class="flex flex-row">
-                    <h2 class="px-2 ml-2 font-semibold">
-                        {{ store.currentAccountName }}
-                    </h2>
-                    <span class="pr-2 font-semibold"
-                        >({{ store.currentAccount }})</span
-                    >
-                    <p>transfer ฿ {{ transactionData.amount }} receive</p>
-                    <h2 class="mx-4 font-semibold">{{ showAccountName }}</h2>
-                    <span class="font-semibold">({{ showAccount }})</span>
-                </div>
-                <div v-else class="flex flex-row">
-                    <h2 class="px-2 ml-2 font-semibold">
-                        {{ store.currentAccountName }}
-                    </h2>
-                    <span class="pr-2 font-semibold"
-                        >({{ store.currentAccount }})</span
-                    >
-                    <p>transfer ฿ {{ transactionData.amount }} to</p>
-                    <h2 class="mx-4 font-semibold">{{ showAccountName }}</h2>
-                    <span class="font-semibold">({{ showAccount }})</span>
-                </div>
-                <div class="flex justify-between">
-                    <p class="px-4 text-gray-400">
-                        {{ formatDate(transactionData.createdAt) }}
-                    </p>
-                    <p class="text-lime-600" v-if="isDeposit">Transfer In</p>
-                    <p class="text-red-700" v-else>Transfer Out</p>
-                </div>
+            <div class="flex justify-between">
+                <p class="px-4 text-gray-400">
+                    {{ formatDate(transactionData.createdAt) }}
+                </p>
+                <p class="text-gray-400" v-if="isDeposit">Transfer In</p>
+                <p class="text-gray-400" v-else>Transfer Out</p>
             </div>
         </div>
     </div>
-    <div class="border-b"></div>
 </template>
 
 <script setup>
@@ -48,8 +32,8 @@ import axios from "axios";
 
 const store = useStore();
 const isDeposit = ref(false);
+const DollarSign = "healthicons:dollar";
 const showAccount = ref(null);
-const showAccountName = ref(null);
 
 const props = defineProps({
     transactionData: Object,
@@ -67,20 +51,6 @@ const formatDate = (dateString) => {
     hours = hours ? hours : 12; // the hour '0' should be '12'
     const formattedTime = `${hours}:${minutes} ${ampm}`;
     return `${day}/${month}/${year}, ${formattedTime}`;
-};
-
-const getUserById = async (userId) => {
-    const getUser = await axios.post(
-        "http://127.0.0.1:3000/api/v1/esb/users/getUserById",
-        { userId: userId },
-        { withCredentials: true }
-    );
-
-    const userData = await getUser.data;
-
-    const userName = userData.data.user.name;
-
-    return userName;
 };
 
 const fetchTransactionData = async () => {
@@ -106,8 +76,6 @@ const fetchTransactionData = async () => {
         const senderAccountNumber =
             senderUserAccount.data.account.accountNumber;
 
-        const senderUserId = senderUserAccount.data.account.userId;
-
         const fetchReceiverUserAccount = await axios.post(
             "http://127.0.0.1:3000/api/v1/esb/users/accounts/getAccountById",
             { accountId: receiverAccountId },
@@ -118,20 +86,14 @@ const fetchTransactionData = async () => {
         const receiverAccountNumber =
             receiverUserAccount.data.account.accountNumber;
 
-        const receiverUserId = receiverUserAccount.data.account.userId;
-
         if (currentAccountId === senderAccountId) {
             // TO
             isDeposit.value = false;
             showAccount.value = receiverAccountNumber;
-            const userName = await getUserById(receiverUserId);
-            showAccountName.value = userName;
         } else {
             // FROM
             isDeposit.value = true;
             showAccount.value = senderAccountNumber;
-            const userName = await getUserById(senderUserId);
-            showAccountName.value = userName;
         }
     } catch (error) {
         console.log(error);
